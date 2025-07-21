@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-email-validator',
@@ -15,7 +16,8 @@ export class EmailValidatorComponent  implements OnInit {
 
       constructor(
         private fb: FormBuilder,
-        private router: Router
+        private router: Router,
+        private service : AuthService
       ) { }
 
     ngOnInit(): void {
@@ -48,8 +50,18 @@ export class EmailValidatorComponent  implements OnInit {
     onSubmit(): void {
         if (this.scheduleForm.valid) {
             console.log('Formulário enviado com sucesso!', this.scheduleForm.value);
-            // TODO: Implementar lógica de envio do código de 
-            this.router.navigate(['/reservas']);
+
+            this.service.verifyEmailCode(this.scheduleForm.value.email, this.scheduleForm.value.codigo).subscribe({
+                next: (response) => {
+                    console.log('Código validado com sucesso!', response);
+                    this.generateAuth();
+                },
+                error: (error) => {
+                    alert('Erro ao validar o código. Por favor, tente novamente.');
+                    console.error('Erro ao validar o código:', error);
+                }
+            });
+
         } else {
             console.log('Formulário inválido');
             this.markFormGroupTouched();
@@ -60,6 +72,29 @@ export class EmailValidatorComponent  implements OnInit {
         Object.keys(this.scheduleForm.controls).forEach(controlName => {
             const control = this.scheduleForm.get(controlName);
             control?.markAsTouched();
+        });
+    }
+
+    private generateAuth(): void {
+        const userData = {
+            email: this.scheduleForm.value.email,
+            nome: this.scheduleForm.value.nome,
+            matricula: this.scheduleForm.value.matricula,
+            telefone: this.scheduleForm.value.telefone,
+            codigo: this.scheduleForm.value.codigo
+        };
+        
+        this.service.gerenateAuth(userData).subscribe({
+            next: (response) => {
+                console.log('Token gerado com sucesso!', response);
+                this.service.saveToken(response);
+                this.service.saveUser(userData);
+                this.router.navigate(['/reservas']);
+            },
+            error: (error) => {
+                alert('Erro ao gerar token. Por favor, tente novamente.');
+                console.error('Erro ao gerar o token:', error);
+            }
         });
     }
 

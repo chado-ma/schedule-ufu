@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-email-code-send',
@@ -14,7 +15,8 @@ export class EmailCodeSendComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private router: Router
+        private router: Router,
+        private service : AuthService
     ) { }
 
     ngOnInit(): void {
@@ -37,20 +39,24 @@ export class EmailCodeSendComponent implements OnInit {
     }
 
     onSubmit(): void {
-        if (this.scheduleForm.valid) {
-            console.log('Formulário enviado com sucesso!', this.scheduleForm.value);
-            
-            // TODO: Aqui você faria a chamada para a API para enviar o código
-            // Por enquanto, vamos simular um envio bem-sucedido
-            
-            // Redirecionar para a página de validação do código
-            this.router.navigate(['/auth/register']);
-            
-        } else {
-            console.log('Formulário inválido');
-            this.markFormGroupTouched();
-        }
+    if (this.scheduleForm.valid) {
+        console.log('Formulário enviado com sucesso!', this.scheduleForm.value.email);
+        this.service.sendEmailCode(this.scheduleForm.value.email).subscribe({
+            next: (response) => {
+                console.log('Código enviado com sucesso!', response);
+                this.router.navigate(['/auth/register']);
+            },
+            error: (error) => {
+                alert('Erro ao enviar o código. Por favor, tente novamente.');
+                console.error('Erro ao enviar o código:', error);
+            }
+        });
+        
+    } else {
+        console.log('Formulário inválido');
+        this.markFormGroupTouched();
     }
+  }
 
     private markFormGroupTouched(): void {
         Object.keys(this.scheduleForm.controls).forEach(controlName => {
