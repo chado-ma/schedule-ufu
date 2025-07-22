@@ -82,6 +82,7 @@ export class UserschdeulesComponent implements OnInit {
           next: (schedules) => {
             console.log('Agendamentos carregados:', schedules);
             this.agendamentos = schedules;
+            this.filterTable();
           },
           error: (error) => {
             console.error('Erro ao carregar agendamentos:', error);

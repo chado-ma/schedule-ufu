@@ -8,21 +8,21 @@
   <div class="tabela-horarios">
     <table>
       <thead>
+        <th class="border-right text-center" scope="col">Dia</th>
         <th class="border-right text-center" scope="col">Horários</th>
         <th class="border-right text-center" scope="col">Ginásio</th>
         <th class="border-right text-center" scope="col">Campus</th>
         <th class="border-right text-center" scope="col">Responsável</th>
         <th class="border-right text-center" scope="col">Curso</th>
-        <th class="text-center" scope="col">Matricula</th>
       </thead>
       <tbody>
         <tr *ngFor="let row of tableData">
+          <td class="text-center">{{ row.data }}</td>
           <td class="text-center">{{ row.horario }}</td>
           <td class="text-center">{{ row.ginasio }}</td>
           <td class="text-center">{{ row.campus }}</td>
           <td class="text-center">{{ row.responsavel }}</td>
           <td class="text-center">{{ row.curso }}</td>
-          <td class="text-center">{{ row.matriculaAluno }}</td>
         </tr>
       </tbody>
     </table>

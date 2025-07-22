@@ -57,7 +57,7 @@ export class SchedulesService {
       'Authorization': `Bearer ${Authorization}`
     });
 
-    return this.http.get<ScheduleModel[]>(`${this.baseApiUrl}/user/${matricula}`, { headers });
+    return this.http.get<ScheduleModel[]>(`${this.baseApiUrl}/${matricula}`, { headers });
   }
 
  // Buscar ginásios disponíveis
