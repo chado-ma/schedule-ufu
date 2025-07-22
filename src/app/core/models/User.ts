@@ -1,6 +1,7 @@
-export interface user {
-    name: string;
-    matricula: string;
-    email: string;
-    type: string;
-  }
+export interface User {
+  matricula: string;
+  nome: string;
+  email: string;
+  telefone: string;
+  acess: String; // AcessEnum
+}

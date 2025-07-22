@@ -1,5 +1,4 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
-import { Reserva } from '../../models/Reserva';
+import { Component, AfterViewInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';;
 import { CommonModule } from '@angular/common';
 import { TableComponent } from "../../components/table/table.component";
 import { SelectFilterComponent } from "../../components/select-filter/select-filter.component";
@@ -7,9 +6,11 @@ import { option } from '../../models/Option';
 import { DatapickerComponent } from "../../components/datapicker/datapicker.component";
 import { ScheduleFormComponent } from '../../components/schedule-form/schedule-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ScheduleTimeService } from '../../services/schedule-time.service';
+import { ScheduleTimeService } from '../../services/schedule/schedule-time.service';
 import { SchedulesService } from '../../services/schedule/schedules.service';
 import { ScheduleModel } from '../../models/ScheduleModel';
+import { Ginasio } from '../../models/Ginasio';
+import { LayoutSchedulesService } from '../../services/layout/layout-schedules.service';
 
 @Component({
   selector: 'app-schedule',
@@ -18,7 +19,7 @@ import { ScheduleModel } from '../../models/ScheduleModel';
   styleUrls: ['./schedule.component.css']
 })
 export class ScheduleComponent {
-
+  Ginasios: Ginasio[] = [];
   isModalOpen: boolean = false;
   selectedDate: string = ''; // Data selecionada no datapicker
   selectedGym: string | null = null; // Ginásio selecionado
@@ -26,7 +27,8 @@ export class ScheduleComponent {
   @ViewChild('modalForm', { static: false }) modalForm!: ElementRef;
   @ViewChild('modalOverlay', { static: false }) modalOverlay!: ElementRef;
 
-  constructor(private renderer: Renderer2, private scheduleTimeService: ScheduleTimeService, private ScheduleService: SchedulesService) { 
+  constructor(private renderer: Renderer2, private scheduleTimeService: ScheduleTimeService, private ScheduleService: SchedulesService, private LayoutService: LayoutSchedulesService) { 
+    this.Ginasios = this.LayoutService.getGinasios();
     this.selectedDate = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
     this.scheduleTimeService.horarioDisponivelClicadoEmitter.subscribe(() => {
       this.abrirModalScheduleForm();
@@ -41,21 +43,13 @@ export class ScheduleComponent {
   
 
   ngOnInit(): void {
-    this.ScheduleService.getAvailableGyms().subscribe({
-      next: (gyms) => {
-        console.log('Ginásios disponíveis:', gyms);
-        this.dropdownOptions = gyms.map(gym => ({
-          id: gym.nome,
-          value: gym.nome,
-          label: gym.nome
-        }));
-      },
-      error: (error) => {
-        console.error('Erro ao carregar ginásios disponíveis:', error);
-      }
+    this.Ginasios.map(ginasio => {
+      this.dropdownOptions.push({
+        id: ginasio.nome,
+        value: ginasio.nome,
+        label: ginasio.nome
+      });
     });
-
-
     this.loadSchedules(); // Carregar agendamentos ao inicializar
   }
 
@@ -68,7 +62,7 @@ export class ScheduleComponent {
 
   // Carregar agendamentos baseado na data e ginásio selecionados
   loadSchedules(): void {
-    if (this.selectedDate && this.selectedGym) {
+    if (this.selectedDate) {
       this.ScheduleService.getSchedules(this.selectedDate, this.selectedGym).subscribe({
         next: (schedules) => {
           console.log('Agendamentos carregados:', schedules);

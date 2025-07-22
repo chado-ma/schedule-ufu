@@ -5,23 +5,25 @@ import { AuthService } from '../auth/auth.service';
 import { NewSchedule } from '../../models/NewSchedule';
 import { ScheduleModel } from '../../models/ScheduleModel';
 import { DeleteSchedule } from '../../models/DeleteSchedule';
+import { Ginasio } from '../../models/Ginasio';
 @Injectable({
   providedIn: 'root'
 })
 export class SchedulesService {
-  private baseApiUrl = 'http://localhost:3000/v1/schedule';
+  private baseApiUrl = 'http://localhost:3000/v1/schedule'; // Usar proxy
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   // Buscar agendamentos por data e ginásio
-  getSchedules(data: string, ginasio: string): Observable<ScheduleModel[]> {
+  getSchedules(data: string, ginasio: string | null): Observable<ScheduleModel[]> {
+    var requestParams: any = { data, ginasio };
     const Authorization = this.authService.getToken();
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${Authorization}`
     });
 
-    return this.http.post<any[]>(`${this.baseApiUrl}`, { data, ginasio }, { headers });
+    return this.http.get<any[]>(`${this.baseApiUrl}`, { params: requestParams, headers });
   }
 
 
@@ -58,14 +60,15 @@ export class SchedulesService {
     return this.http.get<ScheduleModel[]>(`${this.baseApiUrl}/user/${matricula}`, { headers });
   }
 
-  // Buscar ginásios disponíveis
-  getAvailableGyms(): Observable<any[]> {
+ // Buscar ginásios disponíveis
+  getAvailableGyms(): Observable<Ginasio[]> {
     const Authorization = this.authService.getToken();
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${Authorization}`
     });
-    return this.http.get<any[]>(`${this.baseApiUrl}/ginasio`, { headers });
+    
+    return this.http.get<Ginasio[]>(`${this.baseApiUrl}/ginasio`, { headers });
   }
 
 }

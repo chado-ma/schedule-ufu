@@ -11,15 +11,15 @@
           <th class="border-right text-center" scope="col">Nome</th>
           <th class="border-right text-center" scope="col">Matricula</th>
           <th class="border-right text-center" scope="col">Email</th>
-          <th class="border-right text-center" scope="col">Tipo</th>
+          <th class="border-right text-center" scope="col">Acesso</th>
           <th class="text-center" scope="col">Acesso</th>
         </thead>
         <tbody>
           <tr *ngFor="let row of tableData">
-            <td class="text-center">{{ row.name }}</td>
+            <td class="text-center">{{ row.nome }}</td>
             <td class="text-center">{{ row.matricula }}</td>
             <td class="text-center">{{ row.email }}</td>
-            <td class="text-center">{{ row.type }}</td>
+            <td class="text-center">{{ row.acess }}</td>
             <td class="text-center">
               <button class="br-button primary" type="button" aria-label="Controle Reserva"
                 (click)="onDisponivelClick(row)">

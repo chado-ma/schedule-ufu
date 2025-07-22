@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { ScheduleTimeService } from '../../services/schedule-time.service';
-import { user } from '../../models/User';
+import { ScheduleTimeService } from '../../services/schedule/schedule-time.service';
+import { User } from '../../models/User';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,10 +11,10 @@ import { CommonModule } from '@angular/common';
 })
 export class TableUsersComponent {
   @Input() tableName: string = 'Tabela';
-  @Input() tableData: user[] = [];
+  @Input() tableData: User[] = [];
 
   constructor(private scheduleService: ScheduleTimeService) { }
-  onDisponivelClick(row: user): void {
+  onDisponivelClick(row: User): void {
       this.scheduleService.abrirModalScheduleForm();
   }
 }

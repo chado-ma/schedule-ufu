@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Reserva } from '../../models/Reserva';
 import { CommonModule } from '@angular/common';
-import { ScheduleTimeService } from '../../services/schedule-time.service';
+import { ScheduleTimeService } from '../../services/schedule/schedule-time.service';
 import { ScheduleModel } from '../../models/ScheduleModel';
 
 @Component({
