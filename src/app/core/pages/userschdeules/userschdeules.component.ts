@@ -7,6 +7,9 @@ import { CommonModule } from '@angular/common';
 import { option } from '../../models/Option';
 import { ScheduleTimeService } from '../../services/schedule-time.service';
 import { ScheduleFormComponent } from "../../components/schedule-form/schedule-form.component";
+import { ScheduleModel } from '../../models/ScheduleModel';
+import { SchedulesService } from '../../services/schedule/schedules.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-userschdeules',
@@ -21,34 +24,18 @@ export class UserschdeulesComponent implements OnInit {
     @ViewChild('modalForm', { static: false }) modalForm!: ElementRef;
     @ViewChild('modalOverlay', { static: false }) modalOverlay!: ElementRef;
 
-      constructor(private renderer: Renderer2, @Inject(ScheduleTimeService) private scheduleTimeService: ScheduleTimeService) {
+      constructor(private renderer: Renderer2, @Inject(ScheduleTimeService) private scheduleTimeService: ScheduleTimeService, @Inject(SchedulesService) private ScheduleService: SchedulesService, @Inject(AuthService) private authService: AuthService) {
         this.scheduleTimeService.horarioDisponivelClicadoEmitter.subscribe(() => {
           this.abrirModalScheduleForm();
         });
       }
 
-  reserva: Reserva[] = [
-    {
-      horario: '08:00 - 09:00',
-      nome: 'G2',
-      resposavel: 'Gabriel Machado',
-      curso: 'Sistemas de Informação',
-      disponibilidade: 'Editar',
-      campus: 'Santa Mônica'
-    },
-    {
-      horario: '10:00 - 12:00',
-      nome: 'G1 - Tenis de Mesa',
-      resposavel: 'Gabriel Machado',
-      curso: 'Sistemas de Informação',
-      disponibilidade: 'Editar',
-      campus: 'FAEFI'
-    }
-  ];
 
-  filteredReserva: Reserva[] = [];
+
+  filteredReserva: ScheduleModel[] = [];
   selectedCampus: string = '';
   selectedLabel: string = "Selecione o Campus para filtrar";
+  agendamentos: ScheduleModel[] = []; // Lista de reservas vindas da API
 
   dropdownOptions: Array<option> = [
     { id: 'todos', value: '', label: 'Todos' },
@@ -56,9 +43,22 @@ export class UserschdeulesComponent implements OnInit {
     { id: 'faefi', value: 'FAEFI', label: 'FAEFI' }
   ];
 
-  ngOnInit(): void {
-    this.filteredReserva = this.reserva;
-  }
+  ngOnInit(): void { 
+        this.ScheduleService.getAvailableGyms().subscribe({
+      next: (gyms) => {
+        console.log('Ginásios disponíveis:', gyms);
+        this.dropdownOptions = gyms.map(gym => ({
+          id: gym.nome,
+          value: gym.nome,
+          label: gym.nome
+        }));
+      },
+      error: (error) => {
+        console.error('Erro ao carregar ginásios disponíveis:', error);
+      }
+    });
+
+   }
 
   onOptionSelected(option: { value: string; label: string }): void {
     this.selectedCampus = option.value;
@@ -68,11 +68,28 @@ export class UserschdeulesComponent implements OnInit {
 
   filterTable(): void {
     if (this.selectedCampus) {
-      this.filteredReserva = this.reserva.filter(row => row.campus === this.selectedCampus);
+      this.filteredReserva = this.agendamentos.filter(row => row.campus === this.selectedCampus);
     } else {
-      this.filteredReserva = this.reserva;
+      this.filteredReserva = this.agendamentos;
     }
   }
+
+    loadSchedules(): void {
+      const user  = this.authService.getUser();
+      if (!user) {
+        console.error('Usuário não encontrado');
+        return;
+      }
+      this.ScheduleService.getUserSchedules(user.matricula).subscribe({
+        next: (schedules) => {
+          console.log('Agendamentos carregados:', schedules);
+          this.agendamentos = schedules;
+        },
+        error: (error) => {
+          console.error('Erro ao carregar agendamentos:', error);
+        }
+      });
+    }
 
   
   abrirModalScheduleForm(): void {

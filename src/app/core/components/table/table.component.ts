@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Reserva } from '../../models/Reserva';
 import { CommonModule } from '@angular/common';
 import { ScheduleTimeService } from '../../services/schedule-time.service';
+import { ScheduleModel } from '../../models/ScheduleModel';
 
 @Component({
   selector: 'app-table',
@@ -11,15 +12,8 @@ import { ScheduleTimeService } from '../../services/schedule-time.service';
 })
 export class TableComponent {
   @Input() tableName: string = 'Tabela';
-  @Input() tableData: Reserva[] = [];
+  @Input() tableData: ScheduleModel[] = [];
 
   constructor(private scheduleService: ScheduleTimeService) { }
 
-  onDisponivelClick(row: Reserva): void {
-    if (row.disponibilidade === 'Disponível') {
-      this.scheduleService.abrirModalScheduleForm();
-    }else if (row.disponibilidade === 'Editar') {
-      this.scheduleService.abrirModalScheduleForm();
-    }
-  }
 }

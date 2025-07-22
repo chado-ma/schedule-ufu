@@ -11,6 +11,7 @@ import { TableUsersComponent } from "../../components/table-users/table-users.co
 import { user } from '../../models/User';
 import { TableEspacosComponent } from "../../components/table-espacos/table-espacos.component";
 import { ginasio } from '../../models/Ginasio';
+import { ScheduleModel } from '../../models/ScheduleModel';
 
 @Component({
   selector: 'app-configuration',
@@ -110,26 +111,10 @@ export class ConfigurationComponent {
     }
   ];
 
-  reserva: Reserva[] = [
-    {
-      horario: '08:00 - 09:00',
-      nome: 'G2',
-      resposavel: 'Gabriel Machado',
-      curso: 'Sistemas de Informação',
-      disponibilidade: 'Cancelar',
-      campus: 'Santa Mônica'
-    },
-    {
-      horario: '10:00 - 12:00',
-      nome: 'G1 - Tenis de Mesa',
-      resposavel: 'Gabriel Machado',
-      curso: 'Sistemas de Informação',
-      disponibilidade: 'Cancelar',
-      campus: 'FAEFI'
-    }
+  reserva: ScheduleModel[] = [
   ];
-  
-  filteredReserva: Reserva[] = [];
+
+  filteredReserva: ScheduleModel[] = [];
   selectedCampus: string = '';
   selectedLabel: string = '';
   

@@ -5,13 +5,6 @@ import { AuthService } from '../auth/auth.service';
 import { NewSchedule } from '../../models/NewSchedule';
 import { ScheduleModel } from '../../models/ScheduleModel';
 import { DeleteSchedule } from '../../models/DeleteSchedule';
-
-export interface ScheduleRequest {
-  data: string;
-  ginasio: string;
-}
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -21,7 +14,7 @@ export class SchedulesService {
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   // Buscar agendamentos por data e ginásio
-  getSchedules(data: Date, ginasio: string): Observable<ScheduleModel[]> {
+  getSchedules(data: string, ginasio: string): Observable<ScheduleModel[]> {
     const Authorization = this.authService.getToken();
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

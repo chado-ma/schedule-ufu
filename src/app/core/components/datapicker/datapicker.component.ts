@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import flatpickr from 'flatpickr';
 
 @Component({
@@ -7,8 +7,29 @@ import flatpickr from 'flatpickr';
   templateUrl: './datapicker.component.html',
   styleUrl: './datapicker.component.css'
 })
-export class DatapickerComponent implements AfterViewInit {
+export class DatapickerComponent implements AfterViewInit, OnChanges {
+  @Input() selectedDate: string = ''; 
+  @Output() dateSelected = new EventEmitter<string>(); 
+
+  private flatpickrInstance: any;
+
   ngAfterViewInit(): void {
-    flatpickr('#simples-input', {});
+    this.initializeFlatpickr();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedDate'] && this.flatpickrInstance) {
+      this.flatpickrInstance.setDate(this.selectedDate);
+    }
+  }
+
+  private initializeFlatpickr(): void {
+    this.flatpickrInstance = flatpickr('#simples-input', {
+      dateFormat: 'Y-m-d', // Formato correto do flatpickr para YYYY-MM-DD
+      defaultDate: this.selectedDate || new Date(), // Data padrão: selectedDate ou data atual
+      onChange: (selectedDates: Date[], dateStr: string) => {
+        this.dateSelected.emit(dateStr);
+      }
+    });
   }
 }
