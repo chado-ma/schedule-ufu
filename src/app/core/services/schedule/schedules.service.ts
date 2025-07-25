@@ -10,7 +10,7 @@ import { Ginasio } from '../../models/Ginasio';
   providedIn: 'root'
 })
 export class SchedulesService {
-  private baseApiUrl = 'http://localhost:3000/v1/schedule'; // Usar proxy
+  private baseApiUrl = 'http://localhost:3000/v1/schedule';
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 

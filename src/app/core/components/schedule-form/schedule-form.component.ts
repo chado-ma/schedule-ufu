@@ -3,6 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DropdownnComponent } from "../dropdownn/dropdownn.component";
 import { option } from '../../models/Option';
+import { LayoutSchedulesService } from '../../services/layout/layout-schedules.service';
+import { SchedulesService } from '../../services/schedule/schedules.service';
+import { NewSchedule } from '../../models/NewSchedule';
+import { Ginasio } from '../../models/Ginasio';
 
 @Component({
     selector: 'app-schedule-form',
@@ -13,12 +17,21 @@ import { option } from '../../models/Option';
 export class ScheduleFormComponent implements OnInit {
     scheduleForm!: FormGroup;
     horarioRecorrente: boolean = false;
+    Ginasios: Ginasio[] = [];
+    GinasioOptions: Array<option> = [];
+    CampusOptions: Array<option> = [];
 
-    constructor(private fb: FormBuilder) { }
+    constructor(private fb: FormBuilder, private schedulesService: SchedulesService, private layoutService : LayoutSchedulesService) { }
 
     ngOnInit(): void {
+        this.Ginasios = this.layoutService.getGinasios();
+        this.GinasioOptions = this.Ginasios.map(ginasio => ({
+            id: ginasio.nome,
+            value: ginasio.nome,
+            label: `${ginasio.nome} (${ginasio.campus})`
+        }));
         this.scheduleForm = this.fb.group({
-            campus: ['', Validators.required],
+            email: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]*\.?ufu\.br$/)]],
             ginasio: ['', Validators.required],
             horario: ['', [Validators.required]],
             terminaEm: [''],
@@ -42,10 +55,16 @@ export class ScheduleFormComponent implements OnInit {
     }
 
     onSubmit(): void {
-        // TODO: Implementar lógica de envio do formulário
-        if (this.scheduleForm.valid) {
-            console.log('Formulário enviado com sucesso!', this.scheduleForm.value);
-        }
+        this.schedulesService.createSchedule(
+            this.createNewScheduleFromForm()
+        ).subscribe({
+            next: () => {
+                console.log('Formulário enviado com sucesso!', this.scheduleForm.value);
+            },
+            error: (err) => {
+                console.error('Erro ao enviar formulário:', err);
+            }
+        });
     }
 
     getErrorMessage(controlName: string): string {
@@ -59,6 +78,9 @@ export class ScheduleFormComponent implements OnInit {
             }
             if (controlName === 'telefone') {
                 return 'Use o formato: (XX) XXXXX-XXXX.';
+            }
+            if (controlName === 'email') {
+                return 'Use um email válido da UFU: nome@ufu.br';
             }
         }
         if (control?.hasError('min')) {
@@ -79,14 +101,20 @@ export class ScheduleFormComponent implements OnInit {
         this.horarioRecorrente = !this.horarioRecorrente;
     }
 
-    //dropdown options
-    CampusOptions: Array<option> = [
-        { id: 'santa-monica', value: 'Santa Mônica', label: 'Santa Mônica' },
-        { id: 'faefi', value: 'FAEFI', label: 'FAEFI' },
-    ];
-
-    GinasioOptions: Array<option> = [
-        { id: 'g1', value: 'G1', label: 'G1' },
-        { id: 'g2', value: 'G2', label: 'G2' },
-    ];
+    private createNewScheduleFromForm(): NewSchedule {
+    const formValue = this.scheduleForm.value;
+    
+    return {
+        horario: formValue.horario, 
+        data: formValue.horario.split(' - ')[0], 
+        ginasio: formValue.ginasio,
+        responsavel: formValue.responsavel,
+        curso: formValue.curso,
+        campus: this.Ginasios.filter(ginasio => ginasio.nome === formValue.ginasio).map(ginasio => ginasio.campus)[0],
+        matriculaAluno: formValue.matricula,
+        telefone: formValue.telefone,
+        email: formValue.email,
+        quantidadePessoas: parseInt(formValue.quantidade) || 1
+    };
+}
 }

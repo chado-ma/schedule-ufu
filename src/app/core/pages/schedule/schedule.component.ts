@@ -28,7 +28,6 @@ export class ScheduleComponent {
   @ViewChild('modalOverlay', { static: false }) modalOverlay!: ElementRef;
 
   constructor(private renderer: Renderer2, private scheduleTimeService: ScheduleTimeService, private ScheduleService: SchedulesService, private LayoutService: LayoutSchedulesService) { 
-    this.Ginasios = this.LayoutService.getGinasios();
     this.selectedDate = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
     this.scheduleTimeService.horarioDisponivelClicadoEmitter.subscribe(() => {
       this.abrirModalScheduleForm();
@@ -43,6 +42,7 @@ export class ScheduleComponent {
   
 
   ngOnInit(): void {
+    this.Ginasios = this.LayoutService.getGinasios();
     this.Ginasios.map(ginasio => {
       this.dropdownOptions.push({
         id: ginasio.nome,
@@ -81,6 +81,10 @@ export class ScheduleComponent {
     this.selectedLabel = option.label;
     this.loadSchedules(); 
   }
+
+    onDisponivelClick() {
+      this.abrirModalScheduleForm();
+    }
 
   abrirModalScheduleForm(): void {
     this.isModalOpen = true;
