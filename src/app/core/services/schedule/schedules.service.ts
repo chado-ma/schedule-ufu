@@ -35,7 +35,7 @@ export class SchedulesService {
       'Authorization': `Bearer ${Authorization}`
     });
 
-    return this.http.post(`${this.baseApiUrl}/create`, scheduleData, { headers });
+    return this.http.post(`${this.baseApiUrl}`, scheduleData, { headers });
   }
 
   // Deletar agendamento

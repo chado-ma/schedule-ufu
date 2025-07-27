@@ -74,7 +74,7 @@ export class ScheduleFormComponent implements OnInit {
         }
         if (control?.hasError('pattern')) {
             if (controlName === 'horario') {
-                return 'Use o formato: DD/MM/AAAA - HH:MM às HH:MM.';
+                return 'Selecione uma data e horário válidos.';
             }
             if (controlName === 'telefone') {
                 return 'Use o formato: (XX) XXXXX-XXXX.';
@@ -104,9 +104,21 @@ export class ScheduleFormComponent implements OnInit {
     private createNewScheduleFromForm(): NewSchedule {
     const formValue = this.scheduleForm.value;
     
+    // Parse datetime-local format (YYYY-MM-DDTHH:mm) to separate date and time
+    const datetimeValue = formValue.horario; // e.g., "2025-07-27T14:30"
+    
+    if (!datetimeValue || !datetimeValue.includes('T')) {
+        throw new Error('Formato de data/hora inválido');
+    }
+    
+    const [dateString, timeString] = datetimeValue.split('T'); // ["2025-07-27", "14:30"]
+    
+    // Add seconds to time format for Java Time parsing (HH:mm:ss)
+    const timeWithSeconds = timeString.includes(':') ? `${timeString}:00` : timeString;
+    
     return {
-        horario: formValue.horario, 
-        data: formValue.horario.split(' - ')[0], 
+        horario: timeWithSeconds, // "HH:mm:ss" format for Java Time
+        data: dateString, // "YYYY-MM-DD" format for Java LocalDate
         ginasio: formValue.ginasio,
         responsavel: formValue.responsavel,
         curso: formValue.curso,
