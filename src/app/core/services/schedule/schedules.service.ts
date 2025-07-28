@@ -16,7 +16,12 @@ export class SchedulesService {
 
   // Buscar agendamentos por data e ginásio
   getSchedules(data: string, ginasio: string | null): Observable<ScheduleModel[]> {
-    var requestParams: any = { data, ginasio };
+    var requestParams: any;
+    if(ginasio === null) {
+      requestParams = { data };
+    } else {
+      requestParams = { data, ginasio };
+    }
     const Authorization = this.authService.getToken();
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

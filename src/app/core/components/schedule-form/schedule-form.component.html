@@ -6,7 +6,7 @@
                 <div class="br-input">
                     <label for="email">Email</label>
                     <input id="email" type="text" formControlName="email"
-                        placeholder="Email do responsável" />
+                        placeholder="Email do responsável" 
                         [class.invalid]="scheduleForm.get('email')?.invalid && scheduleForm.get('email')?.touched" />
                 </div>
                 <div *ngIf="scheduleForm.get('email')?.invalid && scheduleForm.get('email')?.touched"
@@ -125,8 +125,7 @@
                 <div class="br-input">
                     <label for="matricula">Matrícula</label>
                     <input id="matricula" type="text" formControlName="matricula"
-                        placeholder="Matrícula do responsável" />
-                        [class.invalid]="scheduleForm.get('matricula')?.invalid && scheduleForm.get('matricula')?.touched" />
+                        placeholder="Matrícula do responsável" [class.invalid]="scheduleForm.get('matricula')?.invalid && scheduleForm.get('matricula')?.touched" />
                 </div>
                 <div *ngIf="scheduleForm.get('matricula')?.invalid && scheduleForm.get('matricula')?.touched"
                     class="feedback danger">
