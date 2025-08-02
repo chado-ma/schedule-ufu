@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { ginasio } from '../../models/Ginasio';
+import { Ginasio } from '../../models/Ginasio';
 import { CommonModule } from '@angular/common';
-import { ScheduleTimeService } from '../../services/schedule-time.service';
+import { ScheduleTimeService } from '../../services/schedule/schedule-time.service';
 
 @Component({
   selector: 'app-table-espacos',
@@ -11,10 +11,10 @@ import { ScheduleTimeService } from '../../services/schedule-time.service';
 })
 export class TableEspacosComponent {
     @Input() tableName: string = 'Tabela';
-    @Input() tableData: ginasio[] = [];
+    @Input() tableData: Ginasio[] = [];
   
     constructor(private scheduleService: ScheduleTimeService) { }
-    onDisponivelClick(row: ginasio): void {
+    onDisponivelClick(row: Ginasio): void {
         this.scheduleService.abrirModalScheduleForm();
     }
 

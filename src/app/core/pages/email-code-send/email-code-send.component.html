@@ -1,0 +1,28 @@
+<div class="flex h-full m-0 items-center justify-center">
+    <form [formGroup]="scheduleForm" (ngSubmit)="onSubmit()" class="h-full w-1/3 flex flex-col gap-4">
+        <div class="row">
+            <div class="col-sm-6 mb-3">
+            <div class="br-input"
+                [class.invalid]="scheduleForm.get('email')?.invalid && scheduleForm.get('email')?.touched">
+                <label for="email">Email</label>
+                <input id="email" type="email" formControlName="email" placeholder="Digite o seu email @ufu.br" />
+                <div *ngIf="scheduleForm.get('email')?.invalid && scheduleForm.get('email')?.touched"
+                    class="feedback danger">
+                    {{ getErrorMessage('email') }}
+                </div>
+            </div>
+            </div>
+        </div>
+                
+        <div class="w-full">
+            <button type="submit" 
+                    [disabled]="scheduleForm.invalid" 
+                    class="br-button primary">
+                Enviar código de validação
+            </button>
+        </div>
+    </form>
+</div>
+
+
+

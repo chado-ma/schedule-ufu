@@ -1,7 +1,6 @@
-export interface ginasio {
-    name: string;
+export interface Ginasio {
+    nome: any;
     campus: string;
-    horario_abertura: string;
-    horario_fechamento: string;
-    disponibilidade: string;
+    startTime: string;
+    endTime: string;
   }

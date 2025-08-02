@@ -67,7 +67,8 @@
               "buildTarget": "schedule-ufu:build:production"
             },
             "development": {
-              "buildTarget": "schedule-ufu:build:development"
+              "buildTarget": "schedule-ufu:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

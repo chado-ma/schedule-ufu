@@ -8,25 +8,21 @@
   <div class="tabela-horarios">
     <table>
       <thead>
+        <th class="border-right text-center" scope="col">Dia</th>
         <th class="border-right text-center" scope="col">Horários</th>
         <th class="border-right text-center" scope="col">Ginásio</th>
         <th class="border-right text-center" scope="col">Campus</th>
         <th class="border-right text-center" scope="col">Responsável</th>
         <th class="border-right text-center" scope="col">Curso</th>
-        <th class="text-center" scope="col">Disponibilidade</th>
       </thead>
       <tbody>
         <tr *ngFor="let row of tableData">
+          <td class="text-center">{{ row.data }}</td>
           <td class="text-center">{{ row.horario }}</td>
-          <td class="text-center">{{ row.nome }}</td>
+          <td class="text-center">{{ row.ginasio }}</td>
           <td class="text-center">{{ row.campus }}</td>
-          <td class="text-center">{{ row.resposavel }}</td>
+          <td class="text-center">{{ row.responsavel }}</td>
           <td class="text-center">{{ row.curso }}</td>
-          <td class="text-center">
-            <button class="br-button primary" type="button" aria-label="Controle Reserva"
-              (click)="onDisponivelClick(row)" [disabled]="row.disponibilidade === 'Indisponível'">
-              {{ row.disponibilidade }}</button>
-          </td>
         </tr>
       </tbody>
     </table>

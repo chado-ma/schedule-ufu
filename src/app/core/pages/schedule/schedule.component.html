@@ -1,8 +1,12 @@
 <div class="flex flex-col justify-around">
   <!-- Datapicker -->
   <div class="flex justify-end gap-4">
+    <div class="col-md-4">
+                   <button class="br-button primary" type="button" aria-label="Controle Reserva"
+              (click)="onDisponivelClick()" >Criar Reserva</button>
+    </div>
     <div class="col-sm-6 col-md-4 col-lg-3">
-      <app-datapicker></app-datapicker>
+      <app-datapicker [selectedDate]="selectedDate" (dateSelected)="onDateSelected($event)"></app-datapicker>
     </div>
     <!-- Dropdown/Select -->
     <div class="col-sm-6 col-md-4 col-lg-3">
@@ -11,7 +15,7 @@
     </div>
   </div>
   <!-- Tabela  -->
-  <app-table class="mb-5" [tableName]="'Reservas'" [tableData]="filteredReserva"></app-table>
+  <app-table class="mb-5" [tableName]="'Agendamentos'" [tableData]="agendamentos"></app-table>
   <script src="node_modules/@govbr-ds/core/dist/core.min.js"></script>
 </div>
 
