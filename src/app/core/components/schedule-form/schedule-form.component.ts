@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DropdownnComponent } from "../dropdownn/dropdownn.component";
 import { option } from '../../models/Option';
@@ -20,6 +20,7 @@ export class ScheduleFormComponent implements OnInit {
     Ginasios: Ginasio[] = [];
     GinasioOptions: Array<option> = [];
     CampusOptions: Array<option> = [];
+    @Output() send = new EventEmitter<boolean>();
 
     constructor(private fb: FormBuilder, private schedulesService: SchedulesService, private layoutService : LayoutSchedulesService) { }
 
@@ -59,9 +60,23 @@ export class ScheduleFormComponent implements OnInit {
             this.createNewScheduleFromForm()
         ).subscribe({
             next: () => {
+                this.send.emit(true);
                 console.log('Formulário enviado com sucesso!', this.scheduleForm.value);
             },
             error: (err) => {
+                this.send.emit(false);
+                let errorMessage = 'Erro inesperado ao enviar formulário.';
+                if (err.error && typeof err.error === 'string') {
+                    errorMessage = err.error;
+                } else if (err.error && err.error.message) {
+                    errorMessage = err.error.message;
+                } else if (err.message) {
+                    errorMessage = err.message;
+                } else if (err.status) {
+                    errorMessage = `Erro ${err.status}: ${err.statusText || 'Erro no servidor'}`;
+                }
+                
+                alert('Erro ao enviar formulário: ' + errorMessage);
                 console.error('Erro ao enviar formulário:', err);
             }
         });

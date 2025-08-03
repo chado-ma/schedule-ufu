@@ -104,4 +104,12 @@ export class ScheduleComponent {
     this.renderer.setStyle(this.modalOverlay.nativeElement, 'display', 'none');
   }
 
+  onFormSubmit(success: boolean): void {
+    if (success) {
+      this.fecharModalScheduleForm();
+      this.loadSchedules(); // Recarregar a lista de agendamentos após criar um novo
+    }
+    // Se success for false, o modal permanece aberto para o usuário tentar novamente
+  }
+
 }
