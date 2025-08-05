@@ -12,12 +12,13 @@ import { AuthService } from '../../services/auth/auth.service';
 import { Ginasio } from '../../models/Ginasio';
 import { LayoutSchedulesService } from '../../services/layout/layout-schedules.service';
 import { UserData } from '../../models/UserData';
+import { DeleteScheduleFormComponent } from '../../components/delete-schedule-form/delete-schedule-form.component';
 
 @Component({
   selector: 'app-userschdeules',
   templateUrl: './userschdeules.component.html',
   styleUrl: './userschdeules.component.css',
-  imports: [CommonModule, TableComponent, SelectFilterComponent, ScheduleFormComponent]
+  imports: [CommonModule, TableComponent, SelectFilterComponent, DeleteScheduleFormComponent]
 })
 export class UserschdeulesComponent implements OnInit {
     isModalOpen: boolean = false;
@@ -123,5 +124,12 @@ export class UserschdeulesComponent implements OnInit {
     this.isModalOpen = false;
     this.renderer.setStyle(this.modalForm.nativeElement, 'display', 'none');
     this.renderer.setStyle(this.modalOverlay.nativeElement, 'display', 'none');
+  }
+
+    onFormSubmit(success: boolean): void {
+    if (success) {
+      this.fecharModalScheduleForm();
+      this.loadSchedules(); // Recarregar a lista de agendamentos após criar um novo
+    }
   }
 }

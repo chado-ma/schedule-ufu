@@ -1,20 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DropdownnComponent } from "../dropdownn/dropdownn.component";
+import { DropdownnComponent } from '../dropdownn/dropdownn.component';
+import { Ginasio } from '../../models/Ginasio';
 import { option } from '../../models/Option';
 import { LayoutSchedulesService } from '../../services/layout/layout-schedules.service';
 import { SchedulesService } from '../../services/schedule/schedules.service';
-import { NewSchedule } from '../../models/NewSchedule';
-import { Ginasio } from '../../models/Ginasio';
+import { DeleteSchedule } from '../../models/DeleteSchedule';
 
 @Component({
-    selector: 'app-schedule-form',
-    templateUrl: './schedule-form.component.html',
-    styleUrls: ['./schedule-form.component.css'],
-    imports: [CommonModule, ReactiveFormsModule, DropdownnComponent]
+  selector: 'app-delete-schedule-form',
+  imports: [CommonModule, ReactiveFormsModule, DropdownnComponent],
+  templateUrl: './delete-schedule-form.component.html',
+  styleUrl: './delete-schedule-form.component.css'
 })
-export class ScheduleFormComponent implements OnInit {
+export class DeleteScheduleFormComponent {
     scheduleForm!: FormGroup;
     horarioRecorrente: boolean = false;
     Ginasios: Ginasio[] = [];
@@ -23,7 +23,7 @@ export class ScheduleFormComponent implements OnInit {
 
     constructor(private fb: FormBuilder, private schedulesService: SchedulesService, private layoutService : LayoutSchedulesService) { }
 
-    ngOnInit(): void {
+        ngOnInit(): void {
         this.Ginasios = this.layoutService.getGinasios();
         this.GinasioOptions = this.Ginasios.map(ginasio => ({
             id: ginasio.nome,
@@ -31,20 +31,9 @@ export class ScheduleFormComponent implements OnInit {
             label: `${ginasio.nome} (${ginasio.campus})`
         }));
         this.scheduleForm = this.fb.group({
-            email: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]*\.?ufu\.br$/)]],
             ginasio: ['', Validators.required],
             horario: ['', [Validators.required]],
-            terminaEm: [''],
-            dataTermino: [''],
-            ocorrencias: [''],
-            responsavel: ['', Validators.required],
-            curso: ['', Validators.required],
-            matricula: ['', Validators.required],
-            telefone: [
-                '',
-                [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)],
-            ],
-            quantidade: ['', [Validators.required, Validators.min(1)]],
+            matricula: ['', Validators.required]
         });
 
         Object.keys(this.scheduleForm.controls).forEach(controlName => {
@@ -55,8 +44,8 @@ export class ScheduleFormComponent implements OnInit {
     }
 
     onSubmit(): void {
-        this.schedulesService.createSchedule(
-            this.createNewScheduleFromForm()
+        this.schedulesService.deleteSchedule(
+            this.createDeleteScheduleForm()
         ).subscribe({
             next: () => {
                 this.send.emit(true);
@@ -103,19 +92,12 @@ export class ScheduleFormComponent implements OnInit {
         return '';
     }
 
-    onCampusSelected(selected: option): void {
-        this.scheduleForm.get('campus')?.setValue(selected.value);
-    }
 
     onGinasioSelected(selected: option): void {
         this.scheduleForm.get('ginasio')?.setValue(selected.value);
     }
 
-    onHorarioRecorrente() {
-        this.horarioRecorrente = !this.horarioRecorrente;
-    }
-
-    private createNewScheduleFromForm(): NewSchedule {
+    private createDeleteScheduleForm(): DeleteSchedule {
     const formValue = this.scheduleForm.value;
     
     // Parse datetime-local format (YYYY-MM-DDTHH:mm) to separate date and time
@@ -129,18 +111,14 @@ export class ScheduleFormComponent implements OnInit {
     
     // Add seconds to time format for Java Time parsing (HH:mm:ss)
     const timeWithSeconds = timeString.includes(':') ? `${timeString}:00` : timeString;
-    
-    return {
-        horario: timeWithSeconds, // "HH:mm:ss" format for Java Time
-        data: dateString, // "YYYY-MM-DD" format for Java LocalDate
+
+    // Retornar o objeto DeleteSchedule com os valores formatados
+    const deleteSchedule: DeleteSchedule = {
+        horario: timeWithSeconds,
+        data: dateString,
         ginasio: formValue.ginasio,
-        responsavel: formValue.responsavel,
-        curso: formValue.curso,
-        campus: this.Ginasios.filter(ginasio => ginasio.nome === formValue.ginasio).map(ginasio => ginasio.campus)[0],
-        matriculaAluno: formValue.matricula,
-        telefone: formValue.telefone,
-        email: formValue.email,
-        quantidadePessoas: parseInt(formValue.quantidade) || 1
+        matriculaAluno: formValue.matricula
     };
-}
+    return deleteSchedule;
+  }
 }

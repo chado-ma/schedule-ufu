@@ -50,7 +50,7 @@ export class SchedulesService {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${Authorization}`
     });
-
+    console.log('Deletando agendamento:', deleteRequest);
     return this.http.post(`${this.baseApiUrl}/delete`, deleteRequest, { headers });
   }
 
