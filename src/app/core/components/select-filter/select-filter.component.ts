@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, OnInit, OnChanges, SimpleChanges} from '@angular/core';
 import { option } from '../../models/Option';
 import { CommonModule } from '@angular/common';
 
@@ -8,36 +8,48 @@ import { CommonModule } from '@angular/common';
   templateUrl: './select-filter.component.html',
   styleUrl: './select-filter.component.css'
 })
-export class SelectFilterComponent {
-    @Input()  placeholder: string = 'Selecione o Campus para filtrar';
+export class SelectFilterComponent implements OnInit, OnChanges {
+    @Input() placeholder: string = 'Selecione o Ginásio para filtrar';
     @Input() dropdownOptions: Array<option> = [];
     @Output() selectedOption = new EventEmitter<option>();
   
-      // Select configuration
-      @ViewChild('dropdownList') dropdownList!: ElementRef;
-      isDropdownOpen: boolean = false;
-      // Variáveis para o filtro e lista a ser mostrada
-      selectedCampus: string = '';
-      selectedLabel: string = this.placeholder;
+
+    @ViewChild('dropdownList') dropdownList!: ElementRef;
+    isDropdownOpen: boolean = false;
+    selectedGinasio: string = '';
+    selectedLabel: string = ''; 
     
-  
-    //lógica do dropdown
-    toggleDropdown(): void {
-      this.isDropdownOpen = !this.isDropdownOpen;
-      if (this.isDropdownOpen) {
-        this.dropdownList.nativeElement.style.display = 'absolute';
-      } else {
-        this.dropdownList.nativeElement.style.display = 'none';
-      }
+    ngOnInit(): void {
+        this.selectedLabel = this.placeholder;
     }
 
-  //Exibição da lista
-  onDropdownChange(selectedValue: string): void {
-    var selected = this.dropdownOptions.find(option => option.value === selectedValue) || this.dropdownOptions[0];
-    this.selectedLabel = selected.label;
-    this.selectedCampus = selected.value;
-    this.selectedOption.emit(selected); 
-    this.toggleDropdown();
-  }
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['placeholder'] && changes['placeholder'].currentValue) {
+            this.selectedLabel = changes['placeholder'].currentValue;
+        }
+    }
 
+    //lógica do dropdown
+    toggleDropdown(): void {
+        this.isDropdownOpen = !this.isDropdownOpen;
+        if (this.isDropdownOpen) {
+            this.dropdownList.nativeElement.style.display = 'absolute';
+        } else {
+            this.dropdownList.nativeElement.style.display = 'none';
+        }
+    }
+
+    onDropdownChange(selectedValue: string): void {
+        var selected = this.dropdownOptions.find(option => option.value === selectedValue) || this.dropdownOptions[0];
+        this.selectedLabel = selected.label;
+        this.selectedGinasio = selected.value;
+        this.selectedOption.emit(selected); 
+        this.toggleDropdown();
+    }
+
+    reset(): void {
+        this.selectedLabel = this.placeholder;
+        this.selectedGinasio = '';
+        this.isDropdownOpen = false;
+    }
 }
