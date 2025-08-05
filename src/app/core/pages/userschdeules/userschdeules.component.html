@@ -1,9 +1,10 @@
 <div class="flex flex-col justify-around">
     <!-- Datapicker -->
     <div class="flex justify-end gap-4">
-      <div class="col-sm-6 col-md-4 col-lg-3">
-        <app-datapicker></app-datapicker>
-      </div>
+          <div class="col">
+                   <button class="br-button danger" style="background-color: red; color: white;" type="button" aria-label="Controle Reserva"
+              (click)="onDisponivelClick()" >Excluir Reserva</button>
+    </div>
       <!-- Dropdown/Select -->
       <div class="col-sm-6 col-md-4 col-lg-3">
         <app-select-filter [dropdownOptions]="dropdownOptions" (selectedOption)="onOptionSelected($event)"></app-select-filter>

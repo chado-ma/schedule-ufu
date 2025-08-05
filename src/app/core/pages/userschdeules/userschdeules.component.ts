@@ -17,7 +17,7 @@ import { UserData } from '../../models/UserData';
   selector: 'app-userschdeules',
   templateUrl: './userschdeules.component.html',
   styleUrl: './userschdeules.component.css',
-  imports: [CommonModule, TableComponent, DatapickerComponent, SelectFilterComponent, ScheduleFormComponent]
+  imports: [CommonModule, TableComponent, SelectFilterComponent, ScheduleFormComponent]
 })
 export class UserschdeulesComponent implements OnInit {
     isModalOpen: boolean = false;
@@ -34,8 +34,6 @@ export class UserschdeulesComponent implements OnInit {
         @Inject(AuthService) private authService: AuthService,
         @Inject(LayoutSchedulesService) private LayoutService: LayoutSchedulesService
       ) {
-        this.Ginasios = this.LayoutService.getGinasios();
-        this.user = this.authService.getUser();
         this.scheduleTimeService.horarioDisponivelClicadoEmitter.subscribe(() => {
           this.abrirModalScheduleForm();
         });
@@ -51,16 +49,30 @@ export class UserschdeulesComponent implements OnInit {
   ];
 
   ngOnInit(): void { 
-    this.Ginasios.map(ginasio => {
-      this.dropdownOptions.push({
-        id: ginasio.nome,
-        value: ginasio.nome,
-        label: ginasio.nome
-      });
-    });
+    this.user = this.authService.getUser();
+    this.loadGinasios(); // Carregar ginásios ao inicializar
     this.loadSchedules(); // Carregar agendamentos ao inicializar
     this.filterTable(); // Filtrar tabela inicialmente
    }
+
+  private loadGinasios(): void {
+    this.Ginasios = this.LayoutService.getGinasios();
+    console.log('Ginasios carregados:', this.Ginasios);
+    this.setupDropdownOptions();
+  }
+
+
+  private setupDropdownOptions(): void {
+    this.dropdownOptions = this.Ginasios.map(ginasio => ({
+      id: ginasio.nome,
+      value: ginasio.nome,
+      label: `${ginasio.nome} (${ginasio.campus})`
+    }));
+  }
+
+  onDisponivelClick() {
+      this.abrirModalScheduleForm();
+  }
 
   onOptionSelected(option: { value: string; label: string }): void {
     this.selectedGinasio = option.value;

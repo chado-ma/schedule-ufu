@@ -35,7 +35,7 @@
                 </div>
                 <div class="form-check mt-2">
                     <input type="checkbox" id="horarioRepetido" class="form-check-input"
-                        (click)="onHorarioRecorrente()" />
+                        (click)="onHorarioRecorrente()" disabled />
                     <label for="horarioRepetido" class="form-check-label">Horário Semanal Recorrente</label>
                 </div>
 
@@ -166,11 +166,8 @@
 
         <!-- Botões -->
         <div class="row mt-4">
-            <div class="col-sm-12 d-flex justify-content-between gap-3">
-                <button type="button" class="br-button danger" style="background-color: red; color: white;">Cancelar
-                    reserva</button>
+            <div class="col-sm-12 d-flex justify-content-end gap-3">
                 <div>
-                    <button type="button" class="br-button secondary">Cancelar</button>
                     <button type="submit" class="br-button primary" [disabled]="scheduleForm.invalid">Reservar
                         horário</button>
                 </div>

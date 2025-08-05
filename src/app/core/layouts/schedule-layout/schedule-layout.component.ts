@@ -18,16 +18,18 @@ import { UserData } from '../../models/UserData';
 })
 export class ScheduleLayoutComponent {
   private user: UserData | null = null;
-  constructor(private layoutService: LayoutSchedulesService, private router: Router) { }
-
-  onActivate(event: any): void {
+  constructor(private layoutService: LayoutSchedulesService, private router: Router) {
     this.user = this.layoutService.getUser();
-    if(this.user === null) {
+    if (this.user === null) {
       console.error('User not found');
-        this.router.navigate(['/auth/login']);
-    }else {
-      console.log('Activated component:', event);
+      this.router.navigate(['/auth/login']);
+    } else {
+      console.log('User found:', this.user);
     }
+   }
+
+  getUsername(): string {
+    return this.user ? this.user.nome : 'Guest';
   }
 
 }

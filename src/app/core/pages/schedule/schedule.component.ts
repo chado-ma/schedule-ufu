@@ -19,16 +19,15 @@ import { LayoutSchedulesService } from '../../services/layout/layout-schedules.s
   styleUrls: ['./schedule.component.css']
 })
 export class ScheduleComponent {
-  Ginasios: Ginasio[] = [];
   isModalOpen: boolean = false;
   selectedDate: string = ''; // Data selecionada no datapicker
+  Ginasios: Ginasio[] = [];
   selectedGym: string | null = null; // Ginásio selecionado
 
   @ViewChild('modalForm', { static: false }) modalForm!: ElementRef;
   @ViewChild('modalOverlay', { static: false }) modalOverlay!: ElementRef;
 
   constructor(private renderer: Renderer2, private scheduleTimeService: ScheduleTimeService, private ScheduleService: SchedulesService, private LayoutService: LayoutSchedulesService) {
-      this.Ginasios = this.LayoutService.getGinasios(); 
     this.selectedDate = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
     this.scheduleTimeService.horarioDisponivelClicadoEmitter.subscribe(() => {
       this.abrirModalScheduleForm();
@@ -43,14 +42,22 @@ export class ScheduleComponent {
   
 
   ngOnInit(): void {
-    this.Ginasios.map(ginasio => {
-      this.dropdownOptions.push({
-        id: ginasio.nome,
-        value: ginasio.nome,
-        label: ginasio.nome
-      });
-    });
+    this.loadGinasios(); // Carregar ginásios ao inicializar
     this.loadSchedules(); // Carregar agendamentos ao inicializar
+  }
+
+  private loadGinasios(): void {
+    this.Ginasios = this.LayoutService.getGinasios();
+    console.log('Ginasios carregados:', this.Ginasios);
+    this.setupDropdownOptions();
+  }
+
+  private setupDropdownOptions(): void {
+    this.dropdownOptions = this.Ginasios.map(ginasio => ({
+      id: ginasio.nome,
+      value: ginasio.nome,
+      label: `${ginasio.nome} (${ginasio.campus})`
+    }));
   }
 
   // Método para capturar a data selecionada no datapicker
@@ -102,6 +109,14 @@ export class ScheduleComponent {
     this.isModalOpen = false;
     this.renderer.setStyle(this.modalForm.nativeElement, 'display', 'none');
     this.renderer.setStyle(this.modalOverlay.nativeElement, 'display', 'none');
+  }
+
+  onFormSubmit(success: boolean): void {
+    if (success) {
+      this.fecharModalScheduleForm();
+      this.loadSchedules(); // Recarregar a lista de agendamentos após criar um novo
+    }
+    // Se success for false, o modal permanece aberto para o usuário tentar novamente
   }
 
 }
