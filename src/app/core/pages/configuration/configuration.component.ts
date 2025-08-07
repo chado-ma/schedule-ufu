@@ -11,6 +11,8 @@ import { User } from '../../models/User';
 import { TableEspacosComponent } from "../../components/table-espacos/table-espacos.component";
 import { Ginasio } from '../../models/Ginasio';
 import { ScheduleModel } from '../../models/ScheduleModel';
+import { SchedulesService } from '../../services/schedule/schedules.service';
+import { AdmService } from '../../services/adm/adm.service';
 
 @Component({
   selector: 'app-configuration',
@@ -22,6 +24,10 @@ export class ConfigurationComponent {
   ShowGeral: boolean = true;
   ShowEspaco: boolean = false;
   ShowPermissao: boolean = false;
+
+
+  constructor(private ScheduleService: SchedulesService, private AdmService: AdmService) {
+  }
 
   espacos: Ginasio[] = [
   ];
@@ -51,7 +57,25 @@ export class ConfigurationComponent {
   ];
   
   ngOnInit(): void {
-    this.filteredReserva = this.reserva;
+    this.AdmService.getAllSchedules().subscribe({
+      next: (data: ScheduleModel[]) => {
+        console.log('Agendamentos carregados:', data);
+        this.reserva = data;  
+        this.filteredReserva = this.reserva;
+      },
+      error: (error: any) => {
+        console.error('Erro ao carregar agendamentos:', error);
+      }
+    });
+    this.ScheduleService.getAvailableGyms().subscribe({
+      next: (data: Ginasio[]) => {
+        this.espacos = data;
+      },
+      error: (error: any) => {
+        console.error('Erro ao carregar ginásios:', error);
+      }
+    });
+    this.filterTable();
   }
   
   onOptionSelected(option: { value: string; label: string }): void {
