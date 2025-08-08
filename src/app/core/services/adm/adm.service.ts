@@ -47,7 +47,7 @@ export class AdmService {
       'Authorization': `Bearer ${Authorization}`
     });
 
-    return this.http.get<Restricao[]>(`${this.baseApiUrl}/restrictions`, { headers });
+    return this.http.get<Restricao[]>(`${this.baseApiUrl}/restricao`, { headers });
   }
 
    // Apagar ginásio por id

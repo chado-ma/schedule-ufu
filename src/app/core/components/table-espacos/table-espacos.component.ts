@@ -12,10 +12,6 @@ import { ScheduleTimeService } from '../../services/schedule/schedule-time.servi
 export class TableEspacosComponent {
     @Input() tableName: string = 'Tabela';
     @Input() tableData: Ginasio[] = [];
-  
-    constructor(private scheduleService: ScheduleTimeService) { }
-    onDisponivelClick(row: Ginasio): void {
-        this.scheduleService.abrirModalScheduleForm();
-    }
+
 
 }

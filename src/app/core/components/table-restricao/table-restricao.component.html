@@ -9,14 +9,14 @@
       <table>
         <thead>
           <th class="border-right text-center" scope="col">Nome</th>
-          <th class="border-right text-center" scope="col">Campus</th>
-          <th class="border-right text-center" scope="col">Funcionamento</th>
+          <th class="border-right text-center" scope="col">Dia</th>
+          <th class="border-right text-center" scope="col">Descrição</th>
         </thead>
         <tbody>
           <tr *ngFor="let row of tableData">
-            <td class="text-center">{{ row.nome }}</td>
-            <td class="text-center">{{ row.campus }}</td>
-            <td class="text-center">{{ row.startTime }} - {{ row.endTime }}</td>
+            <td class="text-center">{{ row.ginasio }}</td>
+            <td class="text-center">{{ row.data }}</td>
+            <td class="text-center">{{ row.descricao }}</td>
           </tr>
         </tbody>
       </table>
