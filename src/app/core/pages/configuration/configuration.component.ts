@@ -18,7 +18,7 @@ import { TableRestricaoComponent } from '../../components/table-restricao/table-
 
 @Component({
   selector: 'app-configuration',
-  imports: [CommonModule, TableComponent, DatapickerComponent, SelectFilterComponent, SliderComponent, TableUsersComponent, TableEspacosComponent, TableRestricaoComponent],
+  imports: [CommonModule, TableComponent, SelectFilterComponent, SliderComponent, TableUsersComponent, TableEspacosComponent, TableRestricaoComponent],
   templateUrl: './configuration.component.html',
   styleUrl: './configuration.component.css'
 })

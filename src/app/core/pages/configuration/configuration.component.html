@@ -30,7 +30,8 @@
       <!-- Datapicker -->
         <div class="flex justify-end gap-4">
             <div class="col-sm-6 col-md-4 col-lg-3">
-              <app-datapicker></app-datapicker>
+                <button class="br-button danger" type="button" aria-label="Controle Apagar Ginásio">
+                Cancelar Agendamento</button>
             </div>
         <!-- Dropdown/Select -->
         <div class="col-sm-6 col-md-4 col-lg-3">
@@ -39,6 +40,16 @@
       </div>
       <!-- Tabela  -->
       <app-table class="mb-5" [tableName]="'Gestão Agendamentos'" [tableData]="filteredReserva"></app-table>
+      <div class="flex justify-end">
+              <div class="mr-2">
+                <button class="br-button primary" type="button" aria-label="Controle Criar Ginásio">
+                Criar Restrição</button>
+              </div>
+              <div class="mr-2">
+                <button class="br-button danger" type="button" aria-label="Controle Apagar Ginásio">
+                Apagar Restrição</button>
+              </div>
+            </div>
       <app-table-restricao class="mb-5" [tableName]="'Gestão Restrições'" [tableData]="restricao"></app-table-restricao>
 
         </div>
