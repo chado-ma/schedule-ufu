@@ -20,9 +20,11 @@ export class EmailCodeSendComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        const savedEmail = localStorage.getItem('userEmail') || '';
+        
         this.scheduleForm = this.fb.group({
             email: [
-                '',
+                savedEmail,
                 [
                     Validators.required, 
                     Validators.email,
@@ -36,14 +38,23 @@ export class EmailCodeSendComponent implements OnInit {
             control?.markAsPristine();
             control?.markAsUntouched();
         });
+
+        if (savedEmail) {
+            console.log('Email recuperado do localStorage:', savedEmail);
+        }
     }
 
     onSubmit(): void {
     if (this.scheduleForm.valid) {
-        console.log('Formulário enviado com sucesso!', this.scheduleForm.value.email);
-        this.service.sendEmailCode(this.scheduleForm.value.email).subscribe({
+        const email = this.scheduleForm.value.email;
+        console.log('Formulário enviado com sucesso!', email);
+        
+        this.service.sendEmailCode(email).subscribe({
             next: (response) => {
+                localStorage.removeItem('userEmail');
+                localStorage.setItem('userEmail', email);
                 console.log('Código enviado com sucesso!', response);
+                console.log('Email salvo no localStorage:', email);
                 this.router.navigate(['/auth/register']);
             },
             error: (error) => {

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
+import { UserData } from '../../models/UserData';
 
 @Component({
   selector: 'app-email-validator',
@@ -22,16 +23,9 @@ export class EmailValidatorComponent  implements OnInit {
 
     ngOnInit(): void {
         this.scheduleForm = this.fb.group({
-            email: [
-                '',
-                [
-                    Validators.required, 
-                    Validators.email,
-                    Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]*\.?ufu\.br$/)
-                ]
-            ],
             nome: ['', Validators.required],
-            matricula: ['', Validators.required],
+            matricula: ['', 
+                [Validators.required, Validators.pattern(/^\d{5}[A-Za-z]{3}\d{3}$/)]],
             telefone: [
                 '',
                 [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)],
@@ -76,8 +70,10 @@ export class EmailValidatorComponent  implements OnInit {
     }
 
     private generateAuth(): void {
-        const userData = {
-            email: this.scheduleForm.value.email,
+        const userEmail = localStorage.getItem('userEmail') || '';
+        if(userEmail === '')  this.router.navigate(['/auth/login']);
+        const userData : UserData = {
+            email: userEmail,
             nome: this.scheduleForm.value.nome,
             matricula: this.scheduleForm.value.matricula,
             telefone: this.scheduleForm.value.telefone,
@@ -103,12 +99,9 @@ export class EmailValidatorComponent  implements OnInit {
         if (control?.hasError('required')) {
             return 'Campo obrigatório.';
         }
-        if (control?.hasError('email')) {
-            return 'Email inválido.';
-        }
         if (control?.hasError('pattern')) {
-            if (controlName === 'email') {
-                return 'Use um email válido da UFU: nome@ufu.br';
+            if (controlName === 'matricula') {
+                return 'Use sua matrícula no formato: 00000XXX000';
             }
             if (controlName === 'telefone') {
                 return 'Use o formato: (XX) XXXXX-XXXX.';

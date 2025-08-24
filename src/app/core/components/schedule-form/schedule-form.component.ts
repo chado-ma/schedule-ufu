@@ -46,14 +46,29 @@ export class ScheduleFormComponent implements OnInit {
             ],
             quantidade: ['', [Validators.required, Validators.min(1)]],
         });
+        
 
         Object.keys(this.scheduleForm.controls).forEach(controlName => {
             const control = this.scheduleForm.get(controlName);
             control?.markAsPristine();
             control?.markAsUntouched();
         });
-    }
 
+        this.scheduleForm.get('horario')?.valueChanges.subscribe(value => {
+          if (value) {
+            const date = new Date(value);
+            // Zera os minutos e segundos da data
+            date.setMinutes(0);
+            date.setSeconds(0);
+            
+            // Atualiza o valor do form control, forçando a hora cheia
+            // O { emitEvent: false } é crucial para evitar loops infinitos
+            this.scheduleForm.get('horario')?.setValue(this.toIsoString(date), { emitEvent: false });
+          }
+        });
+
+    }
+  
     onSubmit(): void {
         this.schedulesService.createSchedule(
             this.createNewScheduleFromForm()
@@ -113,6 +128,15 @@ export class ScheduleFormComponent implements OnInit {
 
     onHorarioRecorrente() {
         this.horarioRecorrente = !this.horarioRecorrente;
+    }
+
+    private toIsoString(date: Date): string {
+      const pad = (num: number): string => (num < 10 ? '0' : '') + num;
+      return date.getFullYear() +
+          '-' + pad(date.getMonth() + 1) +
+          '-' + pad(date.getDate()) +
+          'T' + pad(date.getHours()) +
+          ':' + pad(date.getMinutes());
     }
 
     private createNewScheduleFromForm(): NewSchedule {
