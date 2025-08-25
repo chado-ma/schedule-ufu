@@ -4,17 +4,17 @@ import { TableComponent } from "../../components/table/table.component";
 import { SelectFilterComponent } from "../../components/select-filter/select-filter.component";
 import { option } from '../../models/Option';
 import { DatapickerComponent } from "../../components/datapicker/datapicker.component";
-import { ScheduleFormComponent } from '../../components/schedule-form/schedule-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ScheduleTimeService } from '../../services/schedule/schedule-time.service';
 import { SchedulesService } from '../../services/schedule/schedules.service';
 import { ScheduleModel } from '../../models/ScheduleModel';
 import { Ginasio } from '../../models/Ginasio';
 import { LayoutSchedulesService } from '../../services/layout/layout-schedules.service';
+import { UserScheduleFormComponent } from '../../components/user-schedule-form/user-schedule-form.component';
 
 @Component({
   selector: 'app-schedule',
-  imports: [CommonModule, TableComponent, SelectFilterComponent, DatapickerComponent, ScheduleFormComponent, ReactiveFormsModule],
+  imports: [CommonModule, TableComponent, SelectFilterComponent, DatapickerComponent, UserScheduleFormComponent , ReactiveFormsModule],
   templateUrl: './schedule.component.html',
   styleUrls: ['./schedule.component.css']
 })

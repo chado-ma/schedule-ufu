@@ -1,0 +1,118 @@
+<div class="container mt-4">
+    <h2>Reserva de horário</h2>
+    <form [formGroup]="scheduleForm" (ngSubmit)="onSubmit()" novalidate>
+        <!-- Linha 2: Horário -->
+        <div class="row">
+            <div class="col-sm-12 mb-3">
+                <div class="br-datetimepicker" data-mode="single" data-type="datetime-local">
+                    <div class="br-input has-icon"
+                        [class.invalid]="scheduleForm.get('horario')?.invalid && scheduleForm.get('horario')?.touched">
+                        <label for="dateandtime-input">Horário</label>
+                        <input id="dateandtime-input" type="datetime-local" formControlName="horario"  />
+                    </div>
+                    <div *ngIf="scheduleForm.get('horario')?.invalid && scheduleForm.get('horario')?.touched"
+                        class="feedback danger">
+                        {{ getErrorMessage('horario') }}
+                    </div>
+                </div>
+                <div class="form-check mt-2">
+                    <input type="checkbox" id="horarioRepetido" class="form-check-input"
+                        (click)="onHorarioRecorrente()" disabled />
+                    <label for="horarioRepetido" class="form-check-label">Horário Semanal Recorrente</label>
+                </div>
+
+                <!-- Campos adicionais para recorrência -->
+                <div *ngIf="horarioRecorrente" class="mt-3">
+                    <label class="br-label">Termina em</label>
+                    <div class="row">
+                        <!-- Opção "Nunca" -->
+                        <div class="col-sm-12 mb-2" style="margin-top: 14px;">
+                            <div class="br-radio">
+                                <input type="radio" id="terminaNunca" name="terminaEm" value="nunca"
+                                    formControlName="terminaEm" class="br-radio-input" />
+                                <label for="terminaNunca" class="br-radio-label">Nunca</label>
+                            </div>
+                        </div>
+
+                        <!-- Opção "Em" -->
+                        <div class="col-sm-12 mb-2">
+                            <div class="br-radio">
+                                <input type="radio" id="terminaEm" name="terminaEm" value="data"
+                                    formControlName="terminaEm" class="br-radio-input" />
+                                <label for="terminaEm" class="br-radio-label">Em</label>
+                            </div>
+                            <!-- Date picker para a opção "Em" -->
+                            <div *ngIf="scheduleForm.get('terminaEm')?.value === 'data'" class="mt-2">
+                                <div class="br-input">
+                                    <label for="dataTermino">Selecione a data de término: </label>
+                                    <input id="dataTermino" type="date" formControlName="dataTermino" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Opção "Após" -->
+                        <div class="col-sm-12 mb-2">
+                            <div class="br-radio">
+                                <input type="radio" id="terminaApos" name="terminaEm" value="ocorrencias"
+                                    formControlName="terminaEm" class="br-radio-input" />
+                                <label for="terminaApos" class="br-radio-label">Após</label>
+                            </div>
+                            <!-- Campo de quantidade para a opção "Após" -->
+                            <div *ngIf="scheduleForm.get('terminaEm')?.value === 'ocorrencias'" class="mt-2">
+                                <div class="br-input">
+                                    <label for="quantidadeOcorrencias">Quantidade de ocorrências</label>
+                                    <input id="quantidadeOcorrencias" type="number"
+                                        formControlName="quantidadeOcorrencias" placeholder="Ex.: 5" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Linha 4: Curso e Matrícula -->
+        <div class="row">
+            <div class="col-sm-6 mb-3">
+                <div class="br-input">
+                    <label for="curso">Curso</label>
+                    <input id="curso" type="text" formControlName="curso"
+                        placeholder="Preenchido automaticamente ao selecionar o responsável" />
+                </div>
+                <div *ngIf="scheduleForm.get('curso')?.invalid && scheduleForm.get('curso')?.touched"
+                    class="feedback danger">
+                    {{ getErrorMessage('curso') }}
+                </div>
+            </div>
+            <div class="col-sm-6 mb-3">
+                <app-dropdownn field="Ginásio (Obrigatório)" [dropdownOptions]="GinasioOptions"
+                    (selectedOption)="onGinasioSelected($event)"></app-dropdownn>
+            </div>
+
+        </div>
+        <!-- Linha 6: Quantidade de Pessoas -->
+        <div class="row">
+            <div class="col-sm-12 mb-3">
+                <div class="br-input"
+                    [class.invalid]="scheduleForm.get('quantidade')?.invalid && scheduleForm.get('quantidade')?.touched">
+                    <label for="quantidade">Quantidade de Pessoas (Obrigatório)</label>
+                    <input id="quantidade" type="number" formControlName="quantidade" placeholder="Ex.: 11" />
+                    <div *ngIf="scheduleForm.get('quantidade')?.invalid && scheduleForm.get('quantidade')?.touched"
+                        class="feedback danger">
+                        {{ getErrorMessage('quantidade') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botões -->
+        <div class="row mt-4">
+            <div class="col-sm-12 d-flex justify-content-end gap-3">
+                <div>
+                    <button type="submit" class="br-button primary" [disabled]="scheduleForm.invalid">Reservar
+                        horário</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

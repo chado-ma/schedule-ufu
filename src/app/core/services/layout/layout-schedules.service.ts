@@ -30,7 +30,7 @@ constructor(private Auth: AuthService, private ScheduleService: SchedulesService
 
   private loadUser(): void {
     const user = this.Auth.getUser();
-    if (user !== null) {
+    if (user != null) {
       this.user = user;
     } else {
       console.error('Usuário não encontrado');

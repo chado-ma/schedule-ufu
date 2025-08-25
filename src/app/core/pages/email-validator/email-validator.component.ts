@@ -44,11 +44,14 @@ export class EmailValidatorComponent  implements OnInit {
     onSubmit(): void {
         if (this.scheduleForm.valid) {
             console.log('Formulário enviado com sucesso!', this.scheduleForm.value);
+            const userEmail = localStorage.getItem('userEmail') || '';
+            if(userEmail === '')  this.router.navigate(['/auth/login']);
+            console.log('Email do usuário:', userEmail);
 
-            this.service.verifyEmailCode(this.scheduleForm.value.email, this.scheduleForm.value.codigo).subscribe({
+            this.service.verifyEmailCode(userEmail, this.scheduleForm.value.codigo).subscribe({
                 next: (response) => {
                     console.log('Código validado com sucesso!', response);
-                    this.generateAuth();
+                    this.generateAuth(userEmail);
                 },
                 error: (error) => {
                     alert('Erro ao validar o código. Por favor, tente novamente.');
@@ -69,9 +72,7 @@ export class EmailValidatorComponent  implements OnInit {
         });
     }
 
-    private generateAuth(): void {
-        const userEmail = localStorage.getItem('userEmail') || '';
-        if(userEmail === '')  this.router.navigate(['/auth/login']);
+    private generateAuth(userEmail: string): void {
         const userData : UserData = {
             email: userEmail,
             nome: this.scheduleForm.value.nome,

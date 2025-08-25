@@ -18,5 +18,5 @@
   <div class="fixed h-full w-full inset-0 bg-black bg-opacity-50 z-[999]" *ngIf="isModalOpen"></div>
   <div class="w-2/3 max-h-[90vh] fixed top-5 transform bg-white p-5 shadow-md z-[1000] overflow-y-auto" *ngIf="isModalOpen">
   <button class="absolute top-2 right-2 bg-transparent border-none text-xl cursor-pointer" (click)="fecharModalScheduleForm()">X</button>
-  <app-delete-schedule-form (send)="onFormSubmit($event)"></app-delete-schedule-form>
+  <app-user-schedule-delete (send)="onFormSubmit($event)"></app-user-schedule-delete>
 </div>
