@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SchedulesService } from '../schedule/schedules.service';
 import { AuthService } from '../auth/auth.service';
-import { User } from '../../models/User';
 import { Ginasio } from '../../models/Ginasio';
 import { UserData } from '../../models/UserData';
 

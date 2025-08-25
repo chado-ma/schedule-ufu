@@ -93,6 +93,10 @@ export class ConfigurationComponent {
     this.filterTable();
   }
 
+  onDisponivelClick() {
+      console.log('Method not implemented.');
+    }
+
 
     private loadGinasios(): void {
     this.espacos = this.LayoutService.getGinasios();
