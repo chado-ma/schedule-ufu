@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, viewChild, viewChildren } from '@angular/core';
+import { Component, ElementRef, Inject, Renderer2, ViewChild, viewChild, viewChildren } from '@angular/core';
 import { TableComponent } from '../../components/table/table.component';
 import { DatapickerComponent } from '../../components/datapicker/datapicker.component';
 import { SelectFilterComponent } from '../../components/select-filter/select-filter.component';
@@ -15,21 +15,28 @@ import { AdmService } from '../../services/adm/adm.service';
 import { LayoutSchedulesService } from '../../services/layout/layout-schedules.service';
 import { Restricao } from '../../models/Restricao';
 import { TableRestricaoComponent } from '../../components/table-restricao/table-restricao.component';
+import { ScheduleTimeService } from '../../services/schedule/schedule-time.service';
+import { ScheduleFormComponent } from "../../components/schedule-form/schedule-form.component";
 
 @Component({
   selector: 'app-configuration',
-  imports: [CommonModule, TableComponent, SelectFilterComponent, SliderComponent, TableUsersComponent, TableEspacosComponent, TableRestricaoComponent],
+  imports: [CommonModule, TableComponent, SelectFilterComponent, SliderComponent, TableUsersComponent, TableEspacosComponent, TableRestricaoComponent, ScheduleFormComponent],
   templateUrl: './configuration.component.html',
   styleUrl: './configuration.component.css'
 })
 export class ConfigurationComponent {
+  isModelOpenSchedule: boolean = false;
   ShowGeral: boolean = true;
   ShowEspaco: boolean = false;
   ShowPermissao: boolean = false;
 
+  @ViewChild('modalForm', { static: false }) modalForm!: ElementRef;
+  @ViewChild('modalOverlay', { static: false }) modalOverlay!: ElementRef;
 
-  constructor(@Inject(LayoutSchedulesService) private LayoutService: LayoutSchedulesService, @Inject(AdmService) private AdmService: AdmService) {
-
+  constructor(@Inject(LayoutSchedulesService) private LayoutService: LayoutSchedulesService, @Inject(AdmService) private AdmService: AdmService, @Inject(ScheduleTimeService) private scheduleTimeService: ScheduleTimeService, @Inject(Renderer2) private renderer: Renderer2) {
+      this.scheduleTimeService.horarioDisponivelClicadoEmitter.subscribe(() => {
+      this.abrirModalScheduleForm();
+    });
   }
 
   espacos: Ginasio[] = [
@@ -94,7 +101,7 @@ export class ConfigurationComponent {
   }
 
   onDisponivelClick() {
-      console.log('Method not implemented.');
+      this.abrirModalScheduleForm();
     }
 
 
@@ -145,6 +152,41 @@ export class ConfigurationComponent {
         this.ShowEspaco = false;
         this.ShowPermissao = false;
         break;
+    }
+  }
+
+    abrirModalScheduleForm(): void {
+    this.isModelOpenSchedule = true;
+
+    if (this.modalForm?.nativeElement) {
+      this.renderer.setStyle(this.modalForm.nativeElement, 'display', 'block');
+    }
+
+    if (this.modalOverlay?.nativeElement) {
+      this.renderer.setStyle(this.modalOverlay.nativeElement, 'display', 'block');
+    }
+  }
+
+  fecharModalScheduleForm(): void {
+    this.isModelOpenSchedule = false;
+    this.renderer.setStyle(this.modalForm.nativeElement, 'display', 'none');
+    this.renderer.setStyle(this.modalOverlay.nativeElement, 'display', 'none');
+  }
+
+  onFormSubmit(success: boolean): void {
+    if (success) {
+      this.fecharModalScheduleForm();
+      this.AdmService.getAllSchedules().subscribe({
+        next: (data: ScheduleModel[]) => {
+          console.log('Agendamentos carregados:', data);
+          this.reserva = data;  
+          this.filteredReserva = this.reserva;
+        },
+        error: (error: any) => {
+          console.error('Erro ao carregar agendamentos:', error);
+        }
+      });
+      this.filterTable();
     }
   }
 }
