@@ -16,26 +16,30 @@ import { LayoutSchedulesService } from '../../services/layout/layout-schedules.s
 import { Restricao } from '../../models/Restricao';
 import { TableRestricaoComponent } from '../../components/table-restricao/table-restricao.component';
 import { ScheduleTimeService } from '../../services/schedule/schedule-time.service';
-import { ScheduleFormComponent } from "../../components/schedule-form/schedule-form.component";
+import { GenericModalComponent } from "../../components/generic-modal/generic-modal.component";
+import { FormType, ModalConfig } from '../../models/FormType';
 
 @Component({
   selector: 'app-configuration',
-  imports: [CommonModule, TableComponent, SelectFilterComponent, SliderComponent, TableUsersComponent, TableEspacosComponent, TableRestricaoComponent, ScheduleFormComponent],
+  imports: [CommonModule, TableComponent, SelectFilterComponent, SliderComponent, TableUsersComponent, TableEspacosComponent, TableRestricaoComponent, GenericModalComponent],
   templateUrl: './configuration.component.html',
   styleUrl: './configuration.component.css'
 })
 export class ConfigurationComponent {
-  isModelOpenSchedule: boolean = false;
+  // Modal control
+  modalConfig: ModalConfig = {
+    type: FormType.CREATE_SCHEDULE,
+    title: '',
+    isOpen: false
+  };
+
   ShowGeral: boolean = true;
   ShowEspaco: boolean = false;
   ShowPermissao: boolean = false;
 
-  @ViewChild('modalForm', { static: false }) modalForm!: ElementRef;
-  @ViewChild('modalOverlay', { static: false }) modalOverlay!: ElementRef;
-
   constructor(@Inject(LayoutSchedulesService) private LayoutService: LayoutSchedulesService, @Inject(AdmService) private AdmService: AdmService, @Inject(ScheduleTimeService) private scheduleTimeService: ScheduleTimeService, @Inject(Renderer2) private renderer: Renderer2) {
       this.scheduleTimeService.horarioDisponivelClicadoEmitter.subscribe(() => {
-      this.abrirModalScheduleForm();
+      this.openModal(FormType.CREATE_SCHEDULE, 'Criar Reserva');
     });
   }
 
@@ -101,7 +105,7 @@ export class ConfigurationComponent {
   }
 
   onDisponivelClick() {
-      this.abrirModalScheduleForm();
+      this.openModal(FormType.CREATE_SCHEDULE, 'Criar Reserva');
     }
 
 
@@ -155,38 +159,90 @@ export class ConfigurationComponent {
     }
   }
 
-    abrirModalScheduleForm(): void {
-    this.isModelOpenSchedule = true;
-
-    if (this.modalForm?.nativeElement) {
-      this.renderer.setStyle(this.modalForm.nativeElement, 'display', 'block');
-    }
-
-    if (this.modalOverlay?.nativeElement) {
-      this.renderer.setStyle(this.modalOverlay.nativeElement, 'display', 'block');
-    }
+  // Generic modal methods
+  openModal(type: FormType, title: string): void {
+    this.modalConfig = {
+      type,
+      title,
+      isOpen: true
+    };
   }
 
-  fecharModalScheduleForm(): void {
-    this.isModelOpenSchedule = false;
-    this.renderer.setStyle(this.modalForm.nativeElement, 'display', 'none');
-    this.renderer.setStyle(this.modalOverlay.nativeElement, 'display', 'none');
+  closeModal(): void {
+    this.modalConfig.isOpen = false;
   }
 
   onFormSubmit(success: boolean): void {
     if (success) {
-      this.fecharModalScheduleForm();
-      this.AdmService.getAllSchedules().subscribe({
-        next: (data: ScheduleModel[]) => {
-          console.log('Agendamentos carregados:', data);
-          this.reserva = data;  
-          this.filteredReserva = this.reserva;
-        },
-        error: (error: any) => {
-          console.error('Erro ao carregar agendamentos:', error);
-        }
-      });
-      this.filterTable();
+      this.closeModal();
+      
+      // Refresh data based on form type
+      switch (this.modalConfig.type) {
+        case FormType.CREATE_SCHEDULE:
+        case FormType.DELETE_SCHEDULE:
+          this.refreshSchedules();
+          break;
+        case FormType.CREATE_GINASIO:
+        case FormType.DELETE_GINASIO:
+          this.loadGinasios();
+          break;
+        case FormType.CREATE_RESTRICAO:
+        case FormType.DELETE_RESTRICAO:
+          this.refreshRestrictions();
+          break;
+      }
     }
+  }
+
+  // Helper methods for data refresh
+  private refreshSchedules(): void {
+    this.AdmService.getAllSchedules().subscribe({
+      next: (data: ScheduleModel[]) => {
+        console.log('Agendamentos carregados:', data);
+        this.reserva = data;  
+        this.filteredReserva = this.reserva;
+        this.filterTable();
+      },
+      error: (error: any) => {
+        console.error('Erro ao carregar agendamentos:', error);
+      }
+    });
+  }
+
+  private refreshRestrictions(): void {
+    this.AdmService.getAllRestrictions().subscribe({
+      next: (data: Restricao[]) => {
+        console.log('Restrições carregadas:', data);
+        this.restricao = data;
+      },
+      error: (error: any) => {
+        console.error('Erro ao carregar restrições:', error);
+      }
+    });
+  }
+
+  // Button click handlers
+  onCriarReservaClick(): void {
+    this.openModal(FormType.CREATE_SCHEDULE, 'Criar Reserva');
+  }
+
+  onCancelarAgendamentoClick(): void {
+    this.openModal(FormType.DELETE_SCHEDULE, 'Cancelar Agendamento');
+  }
+
+  onCriarGinasioClick(): void {
+    this.openModal(FormType.CREATE_GINASIO, 'Criar Ginásio');
+  }
+
+  onApagarGinasioClick(): void {
+    this.openModal(FormType.DELETE_GINASIO, 'Apagar Ginásio');
+  }
+
+  onCriarRestricaoClick(): void {
+    this.openModal(FormType.CREATE_RESTRICAO, 'Criar Restrição');
+  }
+
+  onApagarRestricaoClick(): void {
+    this.openModal(FormType.DELETE_RESTRICAO, 'Apagar Restrição');
   }
 }
