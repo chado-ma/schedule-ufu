@@ -34,13 +34,19 @@
         (send)="onFormSubmit($event)">
       </app-ginasio-form-delete>
 
-      <div *ngSwitchCase="FormType.CREATE_RESTRICAO" class="p-4 text-center text-gray-500">
-        <p>Formulário de criação de restrição será implementado em breve.</p>
-        <button class="br-button secondary mt-4" (click)="closeModal()">Fechar</button>
-      </div>
       
-      <div *ngSwitchCase="FormType.DELETE_RESTRICAO" class="p-4 text-center text-gray-500">
-        <p>Formulário de exclusão de restrição será implementado em breve.</p>
+      <app-restricao-form
+        *ngSwitchCase="FormType.CREATE_RESTRICAO"
+        (send)="onFormSubmit($event)">
+      </app-restricao-form>
+
+      <app-restricao-form-delete
+        *ngSwitchCase="FormType.DELETE_RESTRICAO"
+        (send)="onFormSubmit($event)">
+      </app-restricao-form-delete>
+
+      <div *ngSwitchCase="FormType.CREATE_ADMINISTRATOR" class="p-4 text-center text-gray-500">
+        <p>Formulário de criação de administrador será implementado em breve.</p>
         <button class="br-button secondary mt-4" (click)="closeModal()">Fechar</button>
       </div>
       

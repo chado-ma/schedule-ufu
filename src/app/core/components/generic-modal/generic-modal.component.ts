@@ -5,10 +5,12 @@ import { ScheduleFormComponent } from '../schedule-form/schedule-form.component'
 import { DeleteScheduleFormComponent } from '../delete-schedule-form/delete-schedule-form.component';
 import { GinasioFormComponent } from "../ginasio-form/ginasio-form.component";
 import { GinasioFormDeleteComponent } from "../ginasio-form-delete/ginasio-form-delete.component";
+import { RestricaoFormComponent } from "../restricao-form/restricao-form.component";
+import { RestricaoFormDeleteComponent } from "../restricao-form-delete/restricao-form-delete.component";
 
 @Component({
   selector: 'app-generic-modal',
-  imports: [CommonModule, ScheduleFormComponent, DeleteScheduleFormComponent, GinasioFormComponent, GinasioFormDeleteComponent],
+  imports: [CommonModule, ScheduleFormComponent, DeleteScheduleFormComponent, GinasioFormComponent, GinasioFormDeleteComponent, RestricaoFormComponent, RestricaoFormDeleteComponent],
   templateUrl: './generic-modal.component.html',
   styleUrl: './generic-modal.component.css'
 })
