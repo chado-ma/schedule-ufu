@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserData } from '../../models/UserData';
+import { User } from '../../models/User';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +17,21 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router
-  ) {
-    this.checkToken();
-  }
+  ) {{
+      this.checkToken();
+      const t: string | null = this.getToken();
+      if (this.isAuthenticated() && t != null) {
+        this.validateAuth(t).subscribe({
+          next: (user) => {
+            console.log('userLoggedIn:', user);
+            localStorage.setItem('userLoggedIn', JSON.stringify(user));
+          },
+          error: () => {
+            this.logout();
+          }
+        });
+      }
+  }}
 
   private checkToken(): void {
     const token = localStorage.getItem(this.tokenKey);
@@ -67,12 +80,15 @@ export class AuthService {
     });
   }
 
-    validateAuth(token : string): Observable<any> {
+  validateAuth(token : string): Observable<User> {
+    const TokenRequest = {
+      'token': token
+    }
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
 
-    return this.http.post(`${this.baseApiUrl}/validate`, token, { headers });
+    return this.http.post<User>(`${this.baseApiUrl}/validate`, TokenRequest, { headers });
   }
 
   
@@ -110,5 +126,10 @@ export class AuthService {
   // Salvar dados do usuário
   saveUser(user: UserData): void {
     localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  getUserLoggedIn(): User | null {
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
+    return userLoggedIn ? JSON.parse(userLoggedIn) : null;
   }
 }

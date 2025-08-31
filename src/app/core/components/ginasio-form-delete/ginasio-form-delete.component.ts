@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
 import { AdmService } from '../../services/adm/adm.service';
 
 @Component({
-  selector: 'app-ginasio-form',
+  selector: 'app-ginasio-form-delete',
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './ginasio-form.component.html',
-  styleUrl: './ginasio-form.component.css'
+  templateUrl: './ginasio-form-delete.component.html',
+  styleUrl: './ginasio-form-delete.component.css'
 })
-export class GinasioFormComponent {
-    scheduleForm!: FormGroup;
+export class GinasioFormDeleteComponent {
+      scheduleForm!: FormGroup;
     @Output() send = new EventEmitter<boolean>();
 
     constructor(private fb: FormBuilder, private admService: AdmService) { }

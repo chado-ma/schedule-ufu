@@ -190,8 +190,22 @@ export class ConfigurationComponent {
         case FormType.DELETE_RESTRICAO:
           this.refreshRestrictions();
           break;
+        case FormType.CREATE_ADMINISTRATOR:
+          this.refreshAdministrators();
       }
     }
+  }
+
+  private refreshAdministrators(): void {
+    this.AdmService.getAllUsers().subscribe({
+      next: (data: User[]) => {
+        console.log('Administradores carregados:', data);
+        this.users = data;
+      },
+      error: (error: any) => {
+        console.error('Erro ao carregar administradores:', error);
+      }
+    });
   }
 
   // Helper methods for data refresh
@@ -244,5 +258,9 @@ export class ConfigurationComponent {
 
   onApagarRestricaoClick(): void {
     this.openModal(FormType.DELETE_RESTRICAO, 'Apagar Restrição');
+  }
+
+  onCriarAdministradorClick() {
+    this.openModal(FormType.CREATE_ADMINISTRATOR, 'Criar Administrador');
   }
 }

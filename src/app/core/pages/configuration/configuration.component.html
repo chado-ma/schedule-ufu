@@ -18,12 +18,12 @@
 
         <div *ngIf="ShowGeral.valueOf()" class="flex flex-col">
             <h3>Agendamentos</h3>
-    <div class="slider-container disabled">
+    <div class="slider-container disabled hidden">
         <app-slider [value]="360" [min]="60" [max]="1440" [step]="60" title="Antecedência Agendamentos"></app-slider>
         <small class="text-muted">Não priorizado para desenvolvimento</small>
     </div>
     
-    <div class="slider-container disabled">
+    <div class="slider-container disabled hidden">
         <app-slider [value]="120" [min]="30" [max]="240" [step]="30" title="Limite Agendamentos"></app-slider>
         <small class="text-muted">Não priorizado para desenvolvimento</small>
     </div>
@@ -81,13 +81,13 @@
 
         <div *ngIf="ShowPermissao.valueOf()"  class="flex flex-col">
           <h3>Permissões</h3>
-          <!-- Dropdown/Select -->
-          <div class="flex justify-end gap-4">
-            <div class="col-sm-6 col-md-4 col-lg-3">
-              <app-select-filter [placeholder]="'Selecione um tipo'" [dropdownOptions]="dropdownOptionsTypeUsers" (selectedOption)="onOptionSelected($event)"></app-select-filter>
+          <div class="flex justify-end">
+           <div class="mr-2">
+              <button class="br-button primary" type="button" aria-label="Controle Criar Administrador"
+              (click)="onCriarAdministradorClick()">
+              Criar Administrador</button>
             </div>
           </div>
-
         <!-- Tabela  -->
         <app-table-users class="mb-5" [tableName]="'Gestão Usuários'" [tableData]="users"></app-table-users>
 
