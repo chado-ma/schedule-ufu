@@ -44,6 +44,13 @@ export class ScheduleComponent {
   ngOnInit(): void {
     this.loadGinasios(); // Carregar ginásios ao inicializar
     this.loadSchedules(); // Carregar agendamentos ao inicializar
+    
+    // ✅ Observar mudanças nos ginásios para atualização automática
+    this.LayoutService.ginasios$.subscribe(ginasios => {
+      this.Ginasios = ginasios;
+      this.setupDropdownOptions();
+      console.log('Ginásios atualizados via Observable (Schedule):', ginasios);
+    });
   }
 
   private loadGinasios(): void {
@@ -113,10 +120,9 @@ export class ScheduleComponent {
 
   onFormSubmit(success: boolean): void {
     if (success) {
+      this.loadSchedules();
       this.fecharModalScheduleForm();
-      this.loadSchedules(); // Recarregar a lista de agendamentos após criar um novo
     }
-    // Se success for false, o modal permanece aberto para o usuário tentar novamente
   }
 
 }

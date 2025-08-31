@@ -1,0 +1,27 @@
+<div class="container mt-4">
+    <h2>Excluir Ginásio</h2>
+    <form [formGroup]="scheduleForm" (ngSubmit)="onSubmit()" novalidate>
+        <!-- Linha 1: Campus e Ginásio -->
+         <div class="row">
+            <div class="col-sm-6 mb-3">
+                <div class="br-input">
+                    <label for="nomeGinasio">Ginásio</label>
+                    <input id="nomeGinasio" type="text" formControlName="nomeGinasio"
+                        placeholder="Nome do ginásio" [class.invalid]="scheduleForm.get('nomeGinasio')?.invalid && scheduleForm.get('nomeGinasio')?.touched" />
+                </div>
+                <div *ngIf="scheduleForm.get('nomeGinasio')?.invalid && scheduleForm.get('nomeGinasio')?.touched"
+                    class="feedback danger">
+                    {{ getErrorMessage('nomeGinasio') }}
+                </div>
+            </div>
+         </div>
+        <!-- Botões -->
+        <div class="row mt-4">
+            <div class="col-sm-12 d-flex justify-content-end gap-3">
+                <div>
+                    <button type="submit" class="br-button primary" [disabled]="scheduleForm.invalid">Excluir Ginásio</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

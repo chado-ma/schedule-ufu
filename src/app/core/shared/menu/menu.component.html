@@ -9,7 +9,7 @@
             Minhas Reservas
         </button>
     </div>
-    <div class="border-b border-black">
+    <div *ngIf="isAdm" class="border-b border-black">
         <button routerLink="configuracoes" class="w-full h-max p-2 text-left pl-4">
             Configurações
         </button>

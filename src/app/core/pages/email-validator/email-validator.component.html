@@ -5,8 +5,8 @@
             <div class="col-sm-12 mb-3">
                 <div class="br-input large input-button"
                     [class.invalid]="scheduleForm.get('nome')?.invalid && scheduleForm.get('nome')?.touched">
-                    <label for="input-search-responsavel">Nome</label>
-                    <input id="input-search-responsavel" type="search" placeholder="Digite o seu nome"
+                    <label for="input-search-responsavel">Nome Completo</label>
+                    <input id="input-search-responsavel" type="search" placeholder="Digite o seu nome completo"
                         formControlName="nome" />
                 </div>
                 <div *ngIf="scheduleForm.get('nome')?.invalid && scheduleForm.get('nome')?.touched"

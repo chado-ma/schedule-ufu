@@ -53,6 +53,13 @@ export class UserschdeulesComponent implements OnInit {
     this.loadGinasios(); // Carregar ginásios ao inicializar
     this.loadSchedules(); // Carregar agendamentos ao inicializar
     this.filterTable(); // Filtrar tabela inicialmente
+    
+    // ✅ Observar mudanças nos ginásios para atualização automática
+    this.LayoutService.ginasios$.subscribe(ginasios => {
+      this.Ginasios = ginasios;
+      this.setupDropdownOptions();
+      console.log('Ginásios atualizados via Observable (UserSchedules):', ginasios);
+    });
    }
 
   private loadGinasios(): void {
@@ -82,7 +89,7 @@ export class UserschdeulesComponent implements OnInit {
 
   filterTable(): void {
     if (this.selectedGinasio) {
-      this.filteredReserva = this.agendamentos.filter(row => row.campus === this.selectedGinasio);
+      this.filteredReserva = this.agendamentos.filter(row => row.ginasio === this.selectedGinasio);
     } else {
       this.filteredReserva = this.agendamentos;
     }

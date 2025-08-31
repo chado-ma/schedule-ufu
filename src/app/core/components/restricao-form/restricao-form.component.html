@@ -1,0 +1,47 @@
+<div class="container mt-4">
+    <h2>Criar Restrição</h2>
+    <form [formGroup]="scheduleForm" (ngSubmit)="onSubmit()" novalidate>
+        <!-- Linha 1: Campus e Ginásio -->
+            <div class="col-sm-6 mb-3">
+                <div class="br-input">
+                    <label for="desc">Descrição</label>
+                    <input id="desc" type="text" formControlName="desc"
+                        placeholder="Descrição da restrição" [class.invalid]="scheduleForm.get('desc')?.invalid && scheduleForm.get('desc')?.touched" />
+                </div>
+                <div *ngIf="scheduleForm.get('desc')?.invalid && scheduleForm.get('desc')?.touched"
+                    class="feedback danger">
+                    {{ getErrorMessage('desc') }}
+                </div>
+            </div>
+            <div class="col-sm-6 mb-3">
+                <app-dropdownn field="Ginásio (Obrigatório)" [dropdownOptions]="GinasioOptions"
+                    (selectedOption)="onGinasioSelected($event)"></app-dropdownn>
+            </div>
+
+        <!-- Linha 2: Horário -->
+        <div class="row">
+            <div class="col-sm-12 mb-3">
+                <div class="br-datetimepicker" data-mode="single" data-type="date">
+                    <div class="br-input has-icon"
+                        [class.invalid]="scheduleForm.get('data')?.invalid && scheduleForm.get('data')?.touched">
+                        <label for="dateandtime-input">Data</label>
+                        <input id="dateandtime-input" type="date" formControlName="data"/>
+                    </div>
+                    <div *ngIf="scheduleForm.get('data')?.invalid && scheduleForm.get('data')?.touched"
+                        class="feedback danger">
+                        {{ getErrorMessage('data') }}
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+        <!-- Botões -->
+        <div class="row mt-4">
+            <div class="col-sm-12 d-flex justify-content-end gap-3">
+                <div>
+                    <button type="submit" class="br-button primary" [disabled]="scheduleForm.invalid">Criar Restrição</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
