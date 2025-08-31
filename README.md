@@ -6,6 +6,185 @@ O **Schedule UFU** é um sistema web para gerenciamento de reservas de espaços 
 
 ---
 
+## Funcionalidades Implementadas
+
+### Autenticação e Autorização
+
+#### Tela de Login (email-code-send)
+- Envio de código de verificação por email
+- Validação de email institucional (@ufu.br)
+- Redirecionamento para registro ou sistema principal
+
+#### Tela de Registro (email-validator)
+- Validação de código enviado por email
+- Cadastro de dados pessoais (nome, matrícula, telefone)
+- Geração automática de token de autenticação
+- Validação de formulário com mensagens de erro personalizadas
+
+#### Sistema de Autenticação
+- Gerenciamento de tokens JWT
+- Proteção de rotas com AuthGuard
+- Armazenamento seguro de dados do usuário
+- Logout automático com redirecionamento
+
+### Tela Principal de Reservas (schedule)
+
+#### Visualização de Agendamentos
+- Tabela com agendamentos do dia selecionado
+- Filtro por ginásio específico
+- Exibição de informações: data, horário, ginásio, campus, responsável, curso
+
+#### Filtros e Navegação
+- Seletor de data (datepicker) para consulta de agendamentos
+- Dropdown para filtrar por ginásio específico
+- Atualização automática da tabela conforme filtros aplicados
+
+#### Criação de Reservas
+- Botão "Criar Reserva" para abrir modal de agendamento
+- Integração com formulário de agendamento completo
+
+### Formulário de Agendamento (schedule-form)
+
+#### Dados Básicos da Reserva
+- Seleção de ginásio via dropdown
+- Seleção de data e horário (datetime-local)
+- Validação automática para horários exatos (sem minutos)
+
+#### Informações do Responsável
+- Email institucional obrigatório (@ufu.br)
+- Nome do responsável
+- Curso/departamento
+- Matrícula do aluno
+- Telefone com máscara de formatação
+- Quantidade de pessoas
+
+#### Agendamento Recorrente
+- Opção para ativar recorrência
+- Configuração de término (data específica ou número de ocorrências)
+- Validação de campos condicionais
+
+#### Validações do Formulário
+- Validação em tempo real com mensagens de erro
+- Campos obrigatórios marcados visualmente
+- Validação de formato de email, telefone e matrícula
+- Prevenção de envio com dados inválidos
+
+### Tela Minhas Reservas (userschedules)
+
+#### Visualização de Reservas Pessoais
+- Listagem de todas as reservas do usuário logado
+- Informações detalhadas de cada agendamento
+- Filtro por ginásio para facilitar localização
+
+#### Gerenciamento de Reservas
+- Botão "Excluir Reserva" para cancelamento
+- Modal de confirmação para exclusão
+- Atualização automática da lista após ações
+
+### Formulário de Exclusão de Reserva (delete-schedule-form)
+
+#### Seleção da Reserva para Exclusão
+- Dropdown com ginásios disponíveis
+- Seleção de data e horário específicos
+- Validação de dados antes da exclusão
+
+#### Confirmação de Exclusão
+- Validação de formulário completo
+- Envio de dados para API de exclusão
+- Feedback visual de sucesso ou erro
+
+### Tela de Configurações (configuration)
+
+#### Interface por Abas
+- Aba "Geral": Visualização de agendamentos gerais
+- Aba "Espaços Esportivos": Gestão de ginásios
+- Aba "Permissões": Gerenciamento de usuários
+
+#### Gestão de Agendamentos
+- Visualização de todos os agendamentos do sistema
+- Filtros por tipo e localização
+- Opção de cancelamento de agendamentos (funcionalidade administrativa)
+
+#### Gestão de Espaços Esportivos
+- Listagem de todos os ginásios cadastrados
+- Informações: nome, campus, horários de funcionamento
+- Botões para criar e excluir ginásios
+
+#### Gestão de Usuários e Permissões
+- Listagem de usuários do sistema
+- Filtro por tipo de usuário (Administrador, Estudante, Professor)
+- Visualização de dados: nome, matrícula, email, nível de acesso
+
+#### Gestão de Restrições
+- Cadastro de restrições temporárias em ginásios
+- Visualização de restrições ativas
+- Informações: ginásio, data, descrição da restrição
+
+### Componentes Reutilizáveis
+
+#### Sistema de Dropdowns
+- Dropdown customizado (dropdownn) para formulários
+- Select-filter para filtros rápidos
+- Suporte a opções dinâmicas e eventos personalizados
+
+#### Tabelas Especializadas
+- Tabela principal para agendamentos
+- Tabela de usuários com ações administrativas
+- Tabela de espaços esportivos
+- Tabela de restrições
+
+#### Seletores de Data e Hora
+- Datepicker integrado com Flatpickr
+- Datetime-local para formulários
+- Validação automática de formatos
+
+#### Interface do Usuário
+- Header com identificação do usuário
+- Menu lateral de navegação
+- Footer institucional
+- Modais responsivos para formulários
+
+### Integrações com Backend
+
+#### Serviços de Agendamento
+- Criação de novos agendamentos
+- Busca por data e ginásio específicos
+- Busca de agendamentos por usuário
+- Exclusão de reservas existentes
+
+#### Serviços Administrativos
+- Busca de todos os agendamentos (visão administrativa)
+- Gestão de usuários do sistema
+- Operações com ginásios (CRUD)
+- Gestão de restrições temporárias
+
+#### Serviços de Layout
+- Carregamento de dados de ginásios
+- Gerenciamento de sessão do usuário
+- Cache de informações essenciais
+
+### Validações e Tratamento de Erros
+
+#### Validações de Formulário
+- Email institucional obrigatório
+- Formato de telefone brasileiro
+- Campos obrigatórios com feedback visual
+- Validação de horários e datas
+
+#### Tratamento de Erros
+- Mensagens de erro personalizadas
+- Feedback visual para operações
+- Tratamento de erros de rede
+- Logs detalhados para debugging
+
+#### Experiência do Usuário
+- Estados de loading durante operações
+- Confirmações para ações destrutivas
+- Navegação intuitiva entre telas
+- Responsividade para diferentes dispositivos
+
+---
+
 ## Development server
 
 To start a local development server, run:

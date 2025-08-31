@@ -1,20 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DropdownnComponent } from "../dropdownn/dropdownn.component";
+import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Ginasio } from '../../models/Ginasio';
+import { NewSchedule } from '../../models/NewSchedule';
 import { option } from '../../models/Option';
 import { LayoutSchedulesService } from '../../services/layout/layout-schedules.service';
 import { SchedulesService } from '../../services/schedule/schedules.service';
-import { NewSchedule } from '../../models/NewSchedule';
-import { Ginasio } from '../../models/Ginasio';
+import { DropdownnComponent } from '../dropdownn/dropdownn.component';
+import { UserData } from '../../models/UserData';
 
 @Component({
-    selector: 'app-schedule-form',
-    templateUrl: './schedule-form.component.html',
-    styleUrls: ['./schedule-form.component.css'],
-    imports: [CommonModule, ReactiveFormsModule, DropdownnComponent]
+  selector: 'app-user-schedule-form',
+  imports: [CommonModule, ReactiveFormsModule, DropdownnComponent],
+  templateUrl: './user-schedule-form.component.html',
+  styleUrl: './user-schedule-form.component.css'
 })
-export class ScheduleFormComponent implements OnInit {
+export class UserScheduleFormComponent implements OnInit {
     scheduleForm!: FormGroup;
     horarioRecorrente: boolean = false;
     Ginasios: Ginasio[] = [];
@@ -28,19 +29,12 @@ export class ScheduleFormComponent implements OnInit {
         this.setupGinasioOptions();
         
         this.scheduleForm = this.fb.group({
-            email: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]*\.?ufu\.br$/)]],
             ginasio: ['', Validators.required],
             horario: ['', [Validators.required]],
             terminaEm: [''],
             dataTermino: [''],
             ocorrencias: [''],
-            responsavel: ['', Validators.required],
             curso: ['', Validators.required],
-            matricula: ['', Validators.required],
-            telefone: [
-                '',
-                [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)],
-            ],
             quantidade: ['', [Validators.required, Validators.min(1)]],
         });
         
@@ -50,12 +44,12 @@ export class ScheduleFormComponent implements OnInit {
             control?.markAsPristine();
             control?.markAsUntouched();
         });
-
+        
         // ✅ Observar mudanças nos ginásios
         this.layoutService.ginasios$.subscribe(ginasios => {
             this.Ginasios = ginasios;
             this.setupGinasioOptions();
-            console.log('Ginásios atualizados via Observable (ScheduleForm):', ginasios);
+            console.log('Ginásios atualizados via Observable (UserScheduleForm):', ginasios);
         });
 
         this.scheduleForm.get('horario')?.valueChanges.subscribe(value => {
@@ -70,7 +64,6 @@ export class ScheduleFormComponent implements OnInit {
             this.scheduleForm.get('horario')?.setValue(this.toIsoString(date), { emitEvent: false });
           }
         });
-
     }
 
     private setupGinasioOptions(): void {
@@ -117,12 +110,6 @@ export class ScheduleFormComponent implements OnInit {
             if (controlName === 'horario') {
                 return 'Selecione uma data e horário válidos.';
             }
-            if (controlName === 'telefone') {
-                return 'Use o formato: (XX) XXXXX-XXXX.';
-            }
-            if (controlName === 'email') {
-                return 'Use um email válido da UFU: nome@ufu.br';
-            }
         }
         if (control?.hasError('min')) {
             return 'O valor deve ser maior que 0.';
@@ -153,6 +140,7 @@ export class ScheduleFormComponent implements OnInit {
 
     private createNewScheduleFromForm(): NewSchedule {
     const formValue = this.scheduleForm.value;
+    const user : UserData | null = this.layoutService.getUser();
     
     // Parse datetime-local format (YYYY-MM-DDTHH:mm) to separate date and time
     const datetimeValue = formValue.horario; // e.g., "2025-07-27T14:30"
@@ -170,12 +158,12 @@ export class ScheduleFormComponent implements OnInit {
         horario: timeWithSeconds, // "HH:mm:ss" format for Java Time
         data: dateString, // "YYYY-MM-DD" format for Java LocalDate
         ginasio: formValue.ginasio,
-        responsavel: formValue.responsavel,
+        responsavel: user?.nome ?? '',
         curso: formValue.curso,
         campus: this.Ginasios.filter(ginasio => ginasio.nome === formValue.ginasio).map(ginasio => ginasio.campus)[0],
-        matriculaAluno: formValue.matricula,
-        telefone: formValue.telefone,
-        email: formValue.email,
+        matriculaAluno: user?.matricula ?? '',
+        telefone: user?.telefone ?? '',
+        email: user?.email ?? '',
         quantidadePessoas: parseInt(formValue.quantidade) || 1
     };
 }

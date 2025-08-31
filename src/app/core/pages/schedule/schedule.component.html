@@ -23,5 +23,5 @@
 <div class="w-2/3 max-h-[90vh] fixed top-5 transform bg-white p-5 shadow-md z-[1000] overflow-y-auto"
   *ngIf="isModalOpen">
   <button class="absolute top-2 right-2 close-button" (click)="fecharModalScheduleForm()">X</button>
-  <app-schedule-form (send)="onFormSubmit($event)"></app-schedule-form>
+  <app-user-schedule-form (send)="onFormSubmit($event)"></app-user-schedule-form>
 </div>

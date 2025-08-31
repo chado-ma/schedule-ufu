@@ -1,20 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DropdownnComponent } from '../dropdownn/dropdownn.component';
+import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { DeleteSchedule } from '../../models/DeleteSchedule';
 import { Ginasio } from '../../models/Ginasio';
 import { option } from '../../models/Option';
 import { LayoutSchedulesService } from '../../services/layout/layout-schedules.service';
 import { SchedulesService } from '../../services/schedule/schedules.service';
-import { DeleteSchedule } from '../../models/DeleteSchedule';
+import { DropdownnComponent } from '../dropdownn/dropdownn.component';
+import { UserData } from '../../models/UserData';
 
 @Component({
-  selector: 'app-delete-schedule-form',
+  selector: 'app-user-schedule-delete',
   imports: [CommonModule, ReactiveFormsModule, DropdownnComponent],
-  templateUrl: './delete-schedule-form.component.html',
-  styleUrl: './delete-schedule-form.component.css'
+  templateUrl: './user-schedule-delete.component.html',
+  styleUrl: './user-schedule-delete.component.css'
 })
-export class DeleteScheduleFormComponent {
+export class UserScheduleDeleteComponent {
     scheduleForm!: FormGroup;
     horarioRecorrente: boolean = false;
     Ginasios: Ginasio[] = [];
@@ -25,12 +26,14 @@ export class DeleteScheduleFormComponent {
 
         ngOnInit(): void {
         this.Ginasios = this.layoutService.getGinasios();
-        this.setupGinasioOptions();
-        
+        this.GinasioOptions = this.Ginasios.map(ginasio => ({
+            id: ginasio.nome,
+            value: ginasio.nome,
+            label: `${ginasio.nome} (${ginasio.campus})`
+        }));
         this.scheduleForm = this.fb.group({
             ginasio: ['', Validators.required],
-            horario: ['', [Validators.required]],
-            matricula: ['', Validators.required]
+            horario: ['', [Validators.required]]
         });
 
         Object.keys(this.scheduleForm.controls).forEach(controlName => {
@@ -38,21 +41,6 @@ export class DeleteScheduleFormComponent {
             control?.markAsPristine();
             control?.markAsUntouched();
         });
-        
-        // ✅ Observar mudanças nos ginásios
-        this.layoutService.ginasios$.subscribe(ginasios => {
-            this.Ginasios = ginasios;
-            this.setupGinasioOptions();
-            console.log('Ginásios atualizados via Observable (DeleteScheduleForm):', ginasios);
-        });
-    }
-
-    private setupGinasioOptions(): void {
-        this.GinasioOptions = this.Ginasios.map(ginasio => ({
-            id: ginasio.nome,
-            value: ginasio.nome,
-            label: `${ginasio.nome} (${ginasio.campus})`
-        }));
     }
 
     onSubmit(): void {
@@ -95,7 +83,7 @@ export class DeleteScheduleFormComponent {
         });
     }
 
-        
+    
     private toIsoString(date: Date): string {
       const pad = (num: number): string => (num < 10 ? '0' : '') + num;
       return date.getFullYear() +
@@ -114,12 +102,6 @@ export class DeleteScheduleFormComponent {
             if (controlName === 'horario') {
                 return 'Selecione uma data e horário válidos.';
             }
-            if (controlName === 'telefone') {
-                return 'Use o formato: (XX) XXXXX-XXXX.';
-            }
-            if (controlName === 'email') {
-                return 'Use um email válido da UFU: nome@ufu.br';
-            }
         }
         if (control?.hasError('min')) {
             return 'O valor deve ser maior que 0.';
@@ -134,6 +116,8 @@ export class DeleteScheduleFormComponent {
 
     private createDeleteScheduleForm(): DeleteSchedule {
     const formValue = this.scheduleForm.value;
+    const user : UserData | null = this.layoutService.getUser();
+    
     
     // Parse datetime-local format (YYYY-MM-DDTHH:mm) to separate date and time
     const datetimeValue = formValue.horario; // e.g., "2025-07-27T14:30"
@@ -152,7 +136,7 @@ export class DeleteScheduleFormComponent {
         horario: timeWithSeconds,
         data: dateString,
         ginasio: formValue.ginasio,
-        matriculaAluno: formValue.matricula
+        matriculaAluno: user?.matricula || ''
     };
     return deleteSchedule;
   }

@@ -18,19 +18,24 @@
 
         <div *ngIf="ShowGeral.valueOf()" class="flex flex-col">
             <h3>Agendamentos</h3>
-    <div class="slider-container disabled">
+    <div class="slider-container disabled hidden">
         <app-slider [value]="360" [min]="60" [max]="1440" [step]="60" title="Antecedência Agendamentos"></app-slider>
         <small class="text-muted">Não priorizado para desenvolvimento</small>
     </div>
     
-    <div class="slider-container disabled">
+    <div class="slider-container disabled hidden">
         <app-slider [value]="120" [min]="30" [max]="240" [step]="30" title="Limite Agendamentos"></app-slider>
         <small class="text-muted">Não priorizado para desenvolvimento</small>
     </div>
       <!-- Datapicker -->
-        <div class="flex justify-end gap-4">
-            <div class="col-sm-6 col-md-4 col-lg-3">
-              <app-datapicker></app-datapicker>
+        <div class="flex justify-end gap-4 mt-8">
+              <div class="mr-2">
+                   <button class="br-button primary" type="button" aria-label="Controle Reserva"
+              (click)="onCriarReservaClick()" >Criar Reserva</button>
+            </div>
+            <div class="mr-2">
+                <button class="br-button danger" type="button" aria-label="Controle Cancelar Agendamento"
+                (click)="onCancelarAgendamentoClick()">Cancelar Agendamento</button>
             </div>
         <!-- Dropdown/Select -->
         <div class="col-sm-6 col-md-4 col-lg-3">
@@ -39,6 +44,18 @@
       </div>
       <!-- Tabela  -->
       <app-table class="mb-5" [tableName]="'Gestão Agendamentos'" [tableData]="filteredReserva"></app-table>
+      <div class="flex justify-end">
+              <div class="mr-2">
+                <button class="br-button primary" type="button" aria-label="Controle Criar Restrição"
+                (click)="onCriarRestricaoClick()">
+                Criar Restrição</button>
+              </div>
+              <div class="mr-2">
+                <button class="br-button danger" type="button" aria-label="Controle Apagar Restrição"
+                (click)="onApagarRestricaoClick()">
+                Apagar Restrição</button>
+              </div>
+            </div>
       <app-table-restricao class="mb-5" [tableName]="'Gestão Restrições'" [tableData]="restricao"></app-table-restricao>
 
         </div>
@@ -47,11 +64,13 @@
           <h3>Espaços Esportivos</h3>
             <div class="flex justify-end">
               <div class="mr-2">
-                <button class="br-button primary" type="button" aria-label="Controle Criar Ginásio">
+                <button class="br-button primary" type="button" aria-label="Controle Criar Ginásio"
+                (click)="onCriarGinasioClick()">
                 Criar Ginásio</button>
               </div>
               <div class="mr-2">
-                <button class="br-button danger" type="button" aria-label="Controle Apagar Ginásio">
+                <button class="br-button danger" type="button" aria-label="Controle Apagar Ginásio"
+                (click)="onApagarGinasioClick()">
                 Apagar Ginásio</button>
               </div>
             </div>
@@ -62,15 +81,24 @@
 
         <div *ngIf="ShowPermissao.valueOf()"  class="flex flex-col">
           <h3>Permissões</h3>
-          <!-- Dropdown/Select -->
-          <div class="flex justify-end gap-4">
-            <div class="col-sm-6 col-md-4 col-lg-3">
-              <app-select-filter [placeholder]="'Selecione um tipo'" [dropdownOptions]="dropdownOptionsTypeUsers" (selectedOption)="onOptionSelected($event)"></app-select-filter>
+          <div class="flex justify-end">
+           <div class="mr-2">
+              <button class="br-button primary" type="button" aria-label="Controle Criar Administrador"
+              (click)="onCriarAdministradorClick()">
+              Criar Administrador</button>
             </div>
           </div>
-
         <!-- Tabela  -->
         <app-table-users class="mb-5" [tableName]="'Gestão Usuários'" [tableData]="users"></app-table-users>
 
         </div>
 </div>
+
+<!-- Generic Modal -->
+<app-generic-modal 
+  [isOpen]="modalConfig.isOpen"
+  [formType]="modalConfig.type"
+  [title]="modalConfig.title"
+  (close)="closeModal()"
+  (formSubmitted)="onFormSubmit($event)">
+</app-generic-modal>

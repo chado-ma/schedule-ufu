@@ -5,20 +5,19 @@ import { SelectFilterComponent } from '../../components/select-filter/select-fil
 import { CommonModule } from '@angular/common';
 import { option } from '../../models/Option';
 import { ScheduleTimeService } from '../../services/schedule/schedule-time.service';
-import { ScheduleFormComponent } from "../../components/schedule-form/schedule-form.component";
 import { ScheduleModel } from '../../models/ScheduleModel';
 import { SchedulesService } from '../../services/schedule/schedules.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { Ginasio } from '../../models/Ginasio';
 import { LayoutSchedulesService } from '../../services/layout/layout-schedules.service';
 import { UserData } from '../../models/UserData';
-import { DeleteScheduleFormComponent } from '../../components/delete-schedule-form/delete-schedule-form.component';
+import { UserScheduleDeleteComponent } from '../../components/user-schedule-delete/user-schedule-delete.component';
 
 @Component({
   selector: 'app-userschdeules',
   templateUrl: './userschdeules.component.html',
   styleUrl: './userschdeules.component.css',
-  imports: [CommonModule, TableComponent, SelectFilterComponent, DeleteScheduleFormComponent]
+  imports: [CommonModule, TableComponent, SelectFilterComponent, UserScheduleDeleteComponent]
 })
 export class UserschdeulesComponent implements OnInit {
     isModalOpen: boolean = false;
@@ -54,6 +53,13 @@ export class UserschdeulesComponent implements OnInit {
     this.loadGinasios(); // Carregar ginásios ao inicializar
     this.loadSchedules(); // Carregar agendamentos ao inicializar
     this.filterTable(); // Filtrar tabela inicialmente
+    
+    // ✅ Observar mudanças nos ginásios para atualização automática
+    this.LayoutService.ginasios$.subscribe(ginasios => {
+      this.Ginasios = ginasios;
+      this.setupDropdownOptions();
+      console.log('Ginásios atualizados via Observable (UserSchedules):', ginasios);
+    });
    }
 
   private loadGinasios(): void {
@@ -83,7 +89,7 @@ export class UserschdeulesComponent implements OnInit {
 
   filterTable(): void {
     if (this.selectedGinasio) {
-      this.filteredReserva = this.agendamentos.filter(row => row.campus === this.selectedGinasio);
+      this.filteredReserva = this.agendamentos.filter(row => row.ginasio === this.selectedGinasio);
     } else {
       this.filteredReserva = this.agendamentos;
     }
@@ -128,8 +134,8 @@ export class UserschdeulesComponent implements OnInit {
 
     onFormSubmit(success: boolean): void {
     if (success) {
+      this.loadSchedules();
       this.fecharModalScheduleForm();
-      this.loadSchedules(); // Recarregar a lista de agendamentos após criar um novo
     }
   }
 }

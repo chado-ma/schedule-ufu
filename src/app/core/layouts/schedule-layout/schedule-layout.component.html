@@ -1,7 +1,7 @@
 <app-header [user]="getUsername()"></app-header>
 <div class="flex h-full m-0">
     <div class="w-1/4 h-max">
-        <app-menu></app-menu>
+        <app-menu [isAdm]="getAccess()"></app-menu>
     </div>
     <div class="flex-1 p-5 shadow-content h-max ">
       <router-outlet></router-outlet>

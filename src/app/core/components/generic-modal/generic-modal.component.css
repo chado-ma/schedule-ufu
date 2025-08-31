@@ -1,0 +1,52 @@
+.modal-overlay {
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.close-button {
+  transition: all 0.2s ease;
+}
+
+.close-button:hover {
+  background-color: #f1f5f9;
+  transform: scale(1.1);
+}
+
+.close-button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modal-content {
+    margin: 1rem;
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100vh - 2rem);
+  }
+}
+
+/* Ensure modal appears above everything */
+.modal-container {
+  z-index: 9999;
+}
+
+/* Smooth scrolling for modal content */
+.modal-body {
+  scroll-behavior: smooth;
+}

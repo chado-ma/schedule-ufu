@@ -1,24 +1,6 @@
 <div class="container mt-4">
     <h2>Reserva de horário</h2>
     <form [formGroup]="scheduleForm" (ngSubmit)="onSubmit()" novalidate>
-        <!-- Linha 1: Campus e Ginásio -->
-            <div class="col-sm-6 mb-3">
-                <div class="br-input">
-                    <label for="email">Email</label>
-                    <input id="email" type="text" formControlName="email"
-                        placeholder="Email do responsável" 
-                        [class.invalid]="scheduleForm.get('email')?.invalid && scheduleForm.get('email')?.touched" />
-                </div>
-                <div *ngIf="scheduleForm.get('email')?.invalid && scheduleForm.get('email')?.touched"
-                    class="feedback danger">
-                    {{ getErrorMessage('email') }}
-                </div>
-            </div>
-            <div class="col-sm-6 mb-3">
-                <app-dropdownn field="Ginásio (Obrigatório)" [dropdownOptions]="GinasioOptions"
-                    (selectedOption)="onGinasioSelected($event)"></app-dropdownn>
-            </div>
-
         <!-- Linha 2: Horário -->
         <div class="row">
             <div class="col-sm-12 mb-3">
@@ -89,25 +71,6 @@
             </div>
         </div>
 
-        <!-- Linha 3: Responsável -->
-        <div class="row">
-            <div class="col-sm-12 mb-3">
-                <div class="br-input large input-button"
-                    [class.invalid]="scheduleForm.get('responsavel')?.invalid && scheduleForm.get('responsavel')?.touched">
-                    <label for="input-search-responsavel">Responsável (Obrigatório)</label>
-                    <input id="input-search-responsavel" type="search" placeholder="Digite o nome do responsável"
-                        formControlName="responsavel" />
-                    <button class="br-button" type="button" aria-label="Buscar">
-                        <i class="fas fa-search" aria-hidden="true"></i>
-                    </button>
-                </div>
-                <div *ngIf="scheduleForm.get('responsavel')?.invalid && scheduleForm.get('responsavel')?.touched"
-                    class="feedback danger">
-                    {{ getErrorMessage('responsavel') }}
-                </div>
-            </div>
-        </div>
-
         <!-- Linha 4: Curso e Matrícula -->
         <div class="row">
             <div class="col-sm-6 mb-3">
@@ -122,33 +85,11 @@
                 </div>
             </div>
             <div class="col-sm-6 mb-3">
-                <div class="br-input">
-                    <label for="matricula">Matrícula</label>
-                    <input id="matricula" type="text" formControlName="matricula"
-                        placeholder="Matrícula do responsável" [class.invalid]="scheduleForm.get('matricula')?.invalid && scheduleForm.get('matricula')?.touched" />
-                </div>
-                <div *ngIf="scheduleForm.get('matricula')?.invalid && scheduleForm.get('matricula')?.touched"
-                    class="feedback danger">
-                    {{ getErrorMessage('matricula') }}
-                </div>
+                <app-dropdownn field="Ginásio (Obrigatório)" [dropdownOptions]="GinasioOptions"
+                    (selectedOption)="onGinasioSelected($event)"></app-dropdownn>
             </div>
-        </div>
 
-        <!-- Linha 5: Telefone -->
-        <div class="row">
-            <div class="col-sm-12 mb-3">
-                <div class="br-input"
-                    [class.invalid]="scheduleForm.get('telefone')?.invalid && scheduleForm.get('telefone')?.touched">
-                    <label for="telefone">Telefone</label>
-                    <input id="telefone" type="text" formControlName="telefone" placeholder="Digite o telefone" />
-                    <div *ngIf="scheduleForm.get('telefone')?.invalid && scheduleForm.get('telefone')?.touched"
-                        class="feedback danger">
-                        {{ getErrorMessage('telefone') }}
-                    </div>
-                </div>
-            </div>
         </div>
-
         <!-- Linha 6: Quantidade de Pessoas -->
         <div class="row">
             <div class="col-sm-12 mb-3">

@@ -4,17 +4,17 @@ import { TableComponent } from "../../components/table/table.component";
 import { SelectFilterComponent } from "../../components/select-filter/select-filter.component";
 import { option } from '../../models/Option';
 import { DatapickerComponent } from "../../components/datapicker/datapicker.component";
-import { ScheduleFormComponent } from '../../components/schedule-form/schedule-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ScheduleTimeService } from '../../services/schedule/schedule-time.service';
 import { SchedulesService } from '../../services/schedule/schedules.service';
 import { ScheduleModel } from '../../models/ScheduleModel';
 import { Ginasio } from '../../models/Ginasio';
 import { LayoutSchedulesService } from '../../services/layout/layout-schedules.service';
+import { UserScheduleFormComponent } from '../../components/user-schedule-form/user-schedule-form.component';
 
 @Component({
   selector: 'app-schedule',
-  imports: [CommonModule, TableComponent, SelectFilterComponent, DatapickerComponent, ScheduleFormComponent, ReactiveFormsModule],
+  imports: [CommonModule, TableComponent, SelectFilterComponent, DatapickerComponent, UserScheduleFormComponent , ReactiveFormsModule],
   templateUrl: './schedule.component.html',
   styleUrls: ['./schedule.component.css']
 })
@@ -44,6 +44,13 @@ export class ScheduleComponent {
   ngOnInit(): void {
     this.loadGinasios(); // Carregar ginásios ao inicializar
     this.loadSchedules(); // Carregar agendamentos ao inicializar
+    
+    // ✅ Observar mudanças nos ginásios para atualização automática
+    this.LayoutService.ginasios$.subscribe(ginasios => {
+      this.Ginasios = ginasios;
+      this.setupDropdownOptions();
+      console.log('Ginásios atualizados via Observable (Schedule):', ginasios);
+    });
   }
 
   private loadGinasios(): void {
@@ -113,10 +120,9 @@ export class ScheduleComponent {
 
   onFormSubmit(success: boolean): void {
     if (success) {
+      this.loadSchedules();
       this.fecharModalScheduleForm();
-      this.loadSchedules(); // Recarregar a lista de agendamentos após criar um novo
     }
-    // Se success for false, o modal permanece aberto para o usuário tentar novamente
   }
 
 }

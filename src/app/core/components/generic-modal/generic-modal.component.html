@@ -1,0 +1,60 @@
+<div class="modal-overlay fixed h-full w-full inset-0 bg-black bg-opacity-50 z-[9999]" 
+     *ngIf="isOpen" 
+     (click)="onOverlayClick()"></div>
+
+<div class="fixed inset-0 flex items-center justify-center z-[10000] p-4"
+     *ngIf="isOpen">
+  <div class="bg-white p-6 shadow-lg rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+    
+    <div class="flex justify-end items-center mb-4">
+      <button class="text-gray-400 hover:text-gray-600 text-xl font-bold w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100" 
+              (click)="closeModal()"
+              aria-label="Fechar modal">×</button>
+    </div>
+    
+    <div [ngSwitch]="formType">
+      <app-schedule-form 
+        *ngSwitchCase="FormType.CREATE_SCHEDULE"
+        (send)="onFormSubmit($event)">
+      </app-schedule-form>
+      
+      <app-delete-schedule-form 
+        *ngSwitchCase="FormType.DELETE_SCHEDULE"
+        (send)="onFormSubmit($event)">
+      </app-delete-schedule-form>
+      
+
+      <app-ginasio-form
+        *ngSwitchCase="FormType.CREATE_GINASIO"
+        (send)="onFormSubmit($event)">
+      </app-ginasio-form>
+
+      <app-ginasio-form-delete
+        *ngSwitchCase="FormType.DELETE_GINASIO"
+        (send)="onFormSubmit($event)">
+      </app-ginasio-form-delete>
+
+      
+      <app-restricao-form
+        *ngSwitchCase="FormType.CREATE_RESTRICAO"
+        (send)="onFormSubmit($event)">
+      </app-restricao-form>
+
+      <app-restricao-form-delete
+        *ngSwitchCase="FormType.DELETE_RESTRICAO"
+        (send)="onFormSubmit($event)">
+      </app-restricao-form-delete>
+
+      <div *ngSwitchCase="FormType.CREATE_ADMINISTRATOR" class="p-4 text-center text-gray-500">
+        <p>Formulário de criação de administrador será implementado em breve.</p>
+        <button class="br-button secondary mt-4" (click)="closeModal()">Fechar</button>
+      </div>
+      
+      <div *ngSwitchDefault class="p-4 text-center text-gray-500">
+        <p>Formulário não implementado para: {{ formType }}</p>
+        <button class="br-button secondary mt-4" (click)="closeModal()">Fechar</button>
+      </div>
+    </div>
+    
+  </div>
+</div>
