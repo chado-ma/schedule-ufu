@@ -25,11 +25,8 @@ export class ScheduleFormComponent implements OnInit {
 
     ngOnInit(): void {
         this.Ginasios = this.layoutService.getGinasios();
-        this.GinasioOptions = this.Ginasios.map(ginasio => ({
-            id: ginasio.nome,
-            value: ginasio.nome,
-            label: `${ginasio.nome} (${ginasio.campus})`
-        }));
+        this.setupGinasioOptions();
+        
         this.scheduleForm = this.fb.group({
             email: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]*\.?ufu\.br$/)]],
             ginasio: ['', Validators.required],
@@ -54,6 +51,13 @@ export class ScheduleFormComponent implements OnInit {
             control?.markAsUntouched();
         });
 
+        // ✅ Observar mudanças nos ginásios
+        this.layoutService.ginasios$.subscribe(ginasios => {
+            this.Ginasios = ginasios;
+            this.setupGinasioOptions();
+            console.log('Ginásios atualizados via Observable (ScheduleForm):', ginasios);
+        });
+
         this.scheduleForm.get('horario')?.valueChanges.subscribe(value => {
           if (value) {
             const date = new Date(value);
@@ -67,6 +71,14 @@ export class ScheduleFormComponent implements OnInit {
           }
         });
 
+    }
+
+    private setupGinasioOptions(): void {
+        this.GinasioOptions = this.Ginasios.map(ginasio => ({
+            id: ginasio.nome,
+            value: ginasio.nome,
+            label: `${ginasio.nome} (${ginasio.campus})`
+        }));
     }
   
     onSubmit(): void {

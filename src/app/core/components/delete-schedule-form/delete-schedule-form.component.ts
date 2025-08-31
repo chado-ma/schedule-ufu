@@ -25,11 +25,8 @@ export class DeleteScheduleFormComponent {
 
         ngOnInit(): void {
         this.Ginasios = this.layoutService.getGinasios();
-        this.GinasioOptions = this.Ginasios.map(ginasio => ({
-            id: ginasio.nome,
-            value: ginasio.nome,
-            label: `${ginasio.nome} (${ginasio.campus})`
-        }));
+        this.setupGinasioOptions();
+        
         this.scheduleForm = this.fb.group({
             ginasio: ['', Validators.required],
             horario: ['', [Validators.required]],
@@ -41,6 +38,21 @@ export class DeleteScheduleFormComponent {
             control?.markAsPristine();
             control?.markAsUntouched();
         });
+        
+        // ✅ Observar mudanças nos ginásios
+        this.layoutService.ginasios$.subscribe(ginasios => {
+            this.Ginasios = ginasios;
+            this.setupGinasioOptions();
+            console.log('Ginásios atualizados via Observable (DeleteScheduleForm):', ginasios);
+        });
+    }
+
+    private setupGinasioOptions(): void {
+        this.GinasioOptions = this.Ginasios.map(ginasio => ({
+            id: ginasio.nome,
+            value: ginasio.nome,
+            label: `${ginasio.nome} (${ginasio.campus})`
+        }));
     }
 
     onSubmit(): void {
@@ -69,7 +81,7 @@ export class DeleteScheduleFormComponent {
             }
         });
 
-                this.scheduleForm.get('horario')?.valueChanges.subscribe(value => {
+        this.scheduleForm.get('horario')?.valueChanges.subscribe(value => {
           if (value) {
             const date = new Date(value);
             // Zera os minutos e segundos da data

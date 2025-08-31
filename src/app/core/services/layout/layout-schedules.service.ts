@@ -4,12 +4,16 @@ import { AuthService } from '../auth/auth.service';
 import { Ginasio } from '../../models/Ginasio';
 import { UserData } from '../../models/UserData';
 import { User } from '../../models/User';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayoutSchedulesService {
   private Ginasios: Ginasio[] = [];
+  private ginasiosSubject = new BehaviorSubject<Ginasio[]>([]);
+  public ginasios$ = this.ginasiosSubject.asObservable();
+  
   private user: UserData | null = null;
   private userLoggedIn: User | null = null;
 
@@ -24,6 +28,7 @@ constructor(private Auth: AuthService, private ScheduleService: SchedulesService
     this.ScheduleService.getAvailableGyms().subscribe({
       next: (ginasios) => {
         this.Ginasios = ginasios;
+        this.ginasiosSubject.next(ginasios); // ✅ Notifica observadores
       },
       error: (error) => {
         console.error('Erro ao carregar ginásios:', error);
@@ -51,6 +56,11 @@ constructor(private Auth: AuthService, private ScheduleService: SchedulesService
 
   getGinasios(): Ginasio[] {
     return this.Ginasios;
+  }
+
+  // ✅ Método para recarregar ginásios
+  reloadGinasios(): void {
+    this.loadGinasios();
   }
 
   getUser(): UserData | null {

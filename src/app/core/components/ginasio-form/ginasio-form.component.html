@@ -1,41 +1,64 @@
 <div class="container mt-4">
-    <h2>Excluir horário</h2>
+    <h2>Criar Ginásio</h2>
     <form [formGroup]="scheduleForm" (ngSubmit)="onSubmit()" novalidate>
         <!-- Linha 1: Campus e Ginásio -->
+         <div class="row">
             <div class="col-sm-6 mb-3">
                 <div class="br-input">
-                    <label for="matricula">Matrícula</label>
-                    <input id="matricula" type="text" formControlName="matricula"
-                        placeholder="Matrícula do responsável" [class.invalid]="scheduleForm.get('matricula')?.invalid && scheduleForm.get('matricula')?.touched" />
+                    <label for="nomeGinasio">Ginásio</label>
+                    <input id="nomeGinasio" type="text" formControlName="nomeGinasio"
+                        placeholder="Nome do ginásio" [class.invalid]="scheduleForm.get('nomeGinasio')?.invalid && scheduleForm.get('nomeGinasio')?.touched" />
                 </div>
-                <div *ngIf="scheduleForm.get('matricula')?.invalid && scheduleForm.get('matricula')?.touched"
+                <div *ngIf="scheduleForm.get('nomeGinasio')?.invalid && scheduleForm.get('nomeGinasio')?.touched"
                     class="feedback danger">
-                    {{ getErrorMessage('matricula') }}
+                    {{ getErrorMessage('nomeGinasio') }}
                 </div>
             </div>
-        <!-- Linha 2: Horário -->
+            <div class="col-sm-6 mb-3">
+                <div class="br-input">
+                    <label for="campus">Campus</label>
+                    <input id="campus" type="text" formControlName="campus"
+                        placeholder="Nome do campus" [class.invalid]="scheduleForm.get('campus')?.invalid && scheduleForm.get('campus')?.touched" />
+                </div>
+                <div *ngIf="scheduleForm.get('campus')?.invalid && scheduleForm.get('campus')?.touched"
+                    class="feedback danger">
+                    {{ getErrorMessage('campus') }}
+                </div>
+            </div>
+         </div>
+        <!-- Linha 2 e 3: Horário -->
         <div class="row">
             <div class="col-sm-12 mb-3">
-                <div class="br-datetimepicker" data-mode="single" data-type="datetime-local">
+                <div class="br-datetimepicker" data-mode="single" data-type="time">
                     <div class="br-input has-icon"
-                        [class.invalid]="scheduleForm.get('horario')?.invalid && scheduleForm.get('horario')?.touched">
-                        <label for="dateandtime-input">Horário</label>
-                        <input id="dateandtime-input" type="datetime-local" formControlName="horario" />
+                        [class.invalid]="scheduleForm.get('horarioAbertura')?.invalid && scheduleForm.get('horarioAbertura')?.touched">
+                        <label for="dateandtime-input">Horário de Abertura</label>
+                        <input id="dateandtime-input" type="time" formControlName="horarioAbertura" />
                     </div>
-                    <div *ngIf="scheduleForm.get('horario')?.invalid && scheduleForm.get('horario')?.touched"
+                    <div *ngIf="scheduleForm.get('horarioAbertura')?.invalid && scheduleForm.get('horarioAbertura')?.touched"
                         class="feedback danger">
-                        {{ getErrorMessage('horario') }}
+                        {{ getErrorMessage('horarioAbertura') }}
                     </div>
                 </div>
-            
+                <div class="br-datetimepicker" data-mode="single" data-type="time">
+                    <div class="br-input has-icon"
+                        [class.invalid]="scheduleForm.get('horarioFechamento')?.invalid && scheduleForm.get('horarioFechamento')?.touched">
+                        <label for="dateandtime-input">Horário de Fechamento</label>
+                        <input id="dateandtime-input" type="time" formControlName="horarioFechamento" />
+                    </div>
+                    <div *ngIf="scheduleForm.get('horarioFechamento')?.invalid && scheduleForm.get('horarioFechamento')?.touched"
+                        class="feedback danger">
+                        {{ getErrorMessage('horarioFechamento') }}
+                    </div>
+                </div>
             </div>
         </div>
         <!-- Botões -->
         <div class="row mt-4">
             <div class="col-sm-12 d-flex justify-content-end gap-3">
                 <div>
-                    <button type="submit" class="br-button primary" [disabled]="scheduleForm.invalid">Excluir
-                        horário</button>
+                    <button type="submit" class="br-button primary" [disabled]="scheduleForm.invalid">Criar
+                        Ginásio</button>
                 </div>
             </div>
         </div>

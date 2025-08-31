@@ -23,16 +23,17 @@
         (send)="onFormSubmit($event)">
       </app-delete-schedule-form>
       
-      <div *ngSwitchCase="FormType.CREATE_GINASIO" class="p-4 text-center text-gray-500">
-        <p>Formulário de criação de ginásio será implementado em breve.</p>
-        <button class="br-button secondary mt-4" (click)="closeModal()">Fechar</button>
-      </div>
-      
-      <div *ngSwitchCase="FormType.DELETE_GINASIO" class="p-4 text-center text-gray-500">
-        <p>Formulário de exclusão de ginásio será implementado em breve.</p>
-        <button class="br-button secondary mt-4" (click)="closeModal()">Fechar</button>
-      </div>
-      
+
+      <app-ginasio-form
+        *ngSwitchCase="FormType.CREATE_GINASIO"
+        (send)="onFormSubmit($event)">
+      </app-ginasio-form>
+
+      <app-ginasio-form-delete
+        *ngSwitchCase="FormType.DELETE_GINASIO"
+        (send)="onFormSubmit($event)">
+      </app-ginasio-form-delete>
+
       <div *ngSwitchCase="FormType.CREATE_RESTRICAO" class="p-4 text-center text-gray-500">
         <p>Formulário de criação de restrição será implementado em breve.</p>
         <button class="br-button secondary mt-4" (click)="closeModal()">Fechar</button>

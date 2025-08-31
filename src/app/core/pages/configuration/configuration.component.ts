@@ -102,6 +102,13 @@ export class ConfigurationComponent {
     this.loadGinasios(); 
     this.setupDropdownOptions();
     this.filterTable();
+    
+    // ✅ Observar mudanças nos ginásios para atualização automática
+    this.LayoutService.ginasios$.subscribe(ginasios => {
+      this.espacos = ginasios;
+      this.setupDropdownOptions();
+      console.log('Ginásios atualizados via Observable:', ginasios);
+    });
   }
 
   onDisponivelClick() {
@@ -110,9 +117,9 @@ export class ConfigurationComponent {
 
 
     private loadGinasios(): void {
-    this.espacos = this.LayoutService.getGinasios();
-    console.log('Ginasios carregados:', this.espacos);
-    this.setupDropdownOptions();
+    // ✅ Força o LayoutService a recarregar os ginásios da API
+    this.LayoutService.reloadGinasios();
+    // ✅ A atualização acontece automaticamente via Observable no ngOnInit
   }
 
 
@@ -133,7 +140,7 @@ export class ConfigurationComponent {
   
   filterTable(): void {
     if (this.selectedCampus) {
-      this.filteredReserva = this.reserva.filter(row => row.campus === this.selectedCampus);
+      this.filteredReserva = this.reserva.filter(row => row.ginasio === this.selectedCampus);
     } else {
       this.filteredReserva = this.reserva;
     }

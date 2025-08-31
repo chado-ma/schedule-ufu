@@ -54,11 +54,13 @@ export class AdmService {
    // Apagar ginásio por id
   deleteGinasio(ginasio: string): Observable<void> {
     const Authorization = this.authService.getToken();
+    console.log('Deletando ginásio:', ginasio);
+    console.log('Authorization:', Authorization);
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${Authorization}`
     });
-    return this.http.post<void>(`${this.baseApiUrl}/ginasio/delete/${ginasio}`, { headers });
+    return this.http.post<void>(`${this.baseApiUrl}/ginasio/delete/${ginasio}`, {}, { headers });
   }
 
   createGinasio(ginasio: CreateGinasio): Observable<void> {

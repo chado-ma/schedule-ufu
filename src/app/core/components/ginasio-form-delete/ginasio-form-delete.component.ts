@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AdmService } from '../../services/adm/adm.service';
 
 @Component({
@@ -15,9 +15,16 @@ export class GinasioFormDeleteComponent {
 
     constructor(private fb: FormBuilder, private admService: AdmService) { }
 
+        ngOnInit(): void {
+        this.scheduleForm = this.fb.group({
+            nomeGinasio: ['', Validators.required]
+        });
+        }
+
         onSubmit(): void {
-        this.admService.createGinasio(
-            this.scheduleForm.value
+       const formValue = this.scheduleForm.value;
+        this.admService.deleteGinasio(
+            formValue.nomeGinasio
         ).subscribe({
             next: () => {
                 this.send.emit(true);
@@ -43,24 +50,10 @@ export class GinasioFormDeleteComponent {
       }
 
 
-        getErrorMessage(controlName: string): string {
+      getErrorMessage(controlName: string): string {
         const control = this.scheduleForm.get(controlName);
         if (control?.hasError('required')) {
             return 'Campo obrigatório.';
-        }
-        if (control?.hasError('pattern')) {
-            if (controlName === 'horario') {
-                return 'Selecione uma data e horário válidos.';
-            }
-            if (controlName === 'telefone') {
-                return 'Use o formato: (XX) XXXXX-XXXX.';
-            }
-            if (controlName === 'email') {
-                return 'Use um email válido da UFU: nome@ufu.br';
-            }
-        }
-        if (control?.hasError('min')) {
-            return 'O valor deve ser maior que 0.';
         }
         return '';
     }

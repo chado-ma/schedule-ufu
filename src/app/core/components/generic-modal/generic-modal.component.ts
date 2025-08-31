@@ -3,10 +3,12 @@ import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from
 import { FormType } from '../../models/FormType';
 import { ScheduleFormComponent } from '../schedule-form/schedule-form.component';
 import { DeleteScheduleFormComponent } from '../delete-schedule-form/delete-schedule-form.component';
+import { GinasioFormComponent } from "../ginasio-form/ginasio-form.component";
+import { GinasioFormDeleteComponent } from "../ginasio-form-delete/ginasio-form-delete.component";
 
 @Component({
   selector: 'app-generic-modal',
-  imports: [CommonModule, ScheduleFormComponent, DeleteScheduleFormComponent],
+  imports: [CommonModule, ScheduleFormComponent, DeleteScheduleFormComponent, GinasioFormComponent, GinasioFormDeleteComponent],
   templateUrl: './generic-modal.component.html',
   styleUrl: './generic-modal.component.css'
 })
@@ -20,7 +22,6 @@ export class GenericModalComponent implements OnChanges {
   FormType = FormType; // Expose enum to template
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Removed debug logs for production
   }
 
   closeModal(): void {
