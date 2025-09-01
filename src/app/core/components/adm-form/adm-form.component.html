@@ -1,1 +1,75 @@
-<p>adm-form works!</p>
+<div class="container mt-4">
+    <h2>Criar Administrador</h2>
+    <form [formGroup]="scheduleForm" (ngSubmit)="onSubmit()" novalidate>
+        <!-- Linha 1: Campus e Ginásio -->
+                 <div class="row">
+            <div class="col-sm-6 mb-3">
+            <div class="br-input"
+                [class.invalid]="scheduleForm.get('email')?.invalid && scheduleForm.get('email')?.touched">
+                <label for="email">Email</label>
+                <input id="email" type="email" formControlName="email" placeholder="Digite o seu email @ufu.br" />
+                <div *ngIf="scheduleForm.get('email')?.invalid && scheduleForm.get('email')?.touched"
+                    class="feedback danger">
+                    {{ getErrorMessage('email') }}
+                </div>
+            </div>
+            </div>
+        </div>
+
+         <!-- Linha 2: Nome -->
+        <div class="row">
+            <div class="col-sm-12 mb-3">
+                <div class="br-input large input-button"
+                    [class.invalid]="scheduleForm.get('nome')?.invalid && scheduleForm.get('nome')?.touched">
+                    <label for="input-search-responsavel">Nome Completo</label>
+                    <input id="input-search-responsavel" type="search" placeholder="Digite o seu nome completo"
+                        formControlName="nome" />
+                </div>
+                <div *ngIf="scheduleForm.get('nome')?.invalid && scheduleForm.get('nome')?.touched"
+                    class="feedback danger">
+                    {{ getErrorMessage('nome') }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Linha 3: Matrícula -->
+        <div class="row">
+            <div class="col-sm-6 mb-3">
+                <div class="br-input">
+                    <label for="matricula">Matrícula</label>
+                    <input id="matricula" type="text" formControlName="matricula"
+                        placeholder="Preenchido automaticamente ao selecionar o responsável"
+                        [class.invalid]="scheduleForm.get('matricula')?.invalid && scheduleForm.get('matricula')?.touched" />
+                </div>
+                <div *ngIf="scheduleForm.get('matricula')?.invalid && scheduleForm.get('matricula')?.touched"
+                    class="feedback danger">
+                    {{ getErrorMessage('matricula') }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Linha 4: Telefone -->
+        <div class="row">
+            <div class="col-sm-12 mb-3">
+                <div class="br-input"
+                    [class.invalid]="scheduleForm.get('telefone')?.invalid && scheduleForm.get('telefone')?.touched">
+                    <label for="telefone">Telefone</label>
+                    <input id="telefone" type="text" formControlName="telefone" placeholder="Digite o telefone" />
+                    <div *ngIf="scheduleForm.get('telefone')?.invalid && scheduleForm.get('telefone')?.touched"
+                        class="feedback danger">
+                        {{ getErrorMessage('telefone') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botões -->
+        <div class="row mt-4">
+            <div class="col-sm-12 d-flex justify-content-end gap-3">
+                <div>
+                    <button type="submit" class="br-button primary" [disabled]="scheduleForm.invalid">Criar Administrador</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

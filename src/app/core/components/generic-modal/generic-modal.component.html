@@ -45,11 +45,12 @@
         (send)="onFormSubmit($event)">
       </app-restricao-form-delete>
 
-      <div *ngSwitchCase="FormType.CREATE_ADMINISTRATOR" class="p-4 text-center text-gray-500">
-        <p>Formulário de criação de administrador será implementado em breve.</p>
-        <button class="br-button secondary mt-4" (click)="closeModal()">Fechar</button>
-      </div>
       
+      <app-adm-form
+        *ngSwitchCase="FormType.CREATE_ADMINISTRATOR"
+        (send)="onFormSubmit($event)">
+      </app-adm-form>
+
       <div *ngSwitchDefault class="p-4 text-center text-gray-500">
         <p>Formulário não implementado para: {{ formType }}</p>
         <button class="br-button secondary mt-4" (click)="closeModal()">Fechar</button>
