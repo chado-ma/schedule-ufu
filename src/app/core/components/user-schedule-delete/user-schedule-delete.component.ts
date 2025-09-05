@@ -41,6 +41,20 @@ export class UserScheduleDeleteComponent {
             control?.markAsPristine();
             control?.markAsUntouched();
         });
+
+        
+        this.scheduleForm.get('horario')?.valueChanges.subscribe(value => {
+          if (value) {
+            const date = new Date(value);
+            // Zera os minutos e segundos da data
+            date.setMinutes(0);
+            date.setSeconds(0);
+            
+            // Atualiza o valor do form control, forçando a hora cheia
+            // O { emitEvent: false } é crucial para evitar loops infinitos
+            this.scheduleForm.get('horario')?.setValue(this.toIsoString(date), { emitEvent: false });
+          }
+        });
     }
 
     onSubmit(): void {
@@ -67,19 +81,6 @@ export class UserScheduleDeleteComponent {
                 alert('Erro ao enviar formulário: ' + errorMessage);
                 console.error('Erro ao enviar formulário:', err);
             }
-        });
-
-        this.scheduleForm.get('horario')?.valueChanges.subscribe(value => {
-          if (value) {
-            const date = new Date(value);
-            // Zera os minutos e segundos da data
-            date.setMinutes(0);
-            date.setSeconds(0);
-            
-            // Atualiza o valor do form control, forçando a hora cheia
-            // O { emitEvent: false } é crucial para evitar loops infinitos
-            this.scheduleForm.get('horario')?.setValue(this.toIsoString(date), { emitEvent: false });
-          }
         });
     }
 

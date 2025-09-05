@@ -7,10 +7,11 @@ import { GinasioFormComponent } from "../ginasio-form/ginasio-form.component";
 import { GinasioFormDeleteComponent } from "../ginasio-form-delete/ginasio-form-delete.component";
 import { RestricaoFormComponent } from "../restricao-form/restricao-form.component";
 import { RestricaoFormDeleteComponent } from "../restricao-form-delete/restricao-form-delete.component";
+import { AdmFormComponent } from "../adm-form/adm-form.component";
 
 @Component({
   selector: 'app-generic-modal',
-  imports: [CommonModule, ScheduleFormComponent, DeleteScheduleFormComponent, GinasioFormComponent, GinasioFormDeleteComponent, RestricaoFormComponent, RestricaoFormDeleteComponent],
+  imports: [CommonModule, ScheduleFormComponent, DeleteScheduleFormComponent, GinasioFormComponent, GinasioFormDeleteComponent, RestricaoFormComponent, RestricaoFormDeleteComponent, AdmFormComponent],
   templateUrl: './generic-modal.component.html',
   styleUrl: './generic-modal.component.css'
 })
