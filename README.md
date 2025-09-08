@@ -1,338 +1,279 @@
-# Schedule UFU - Documentação do Projeto
+# Schedule UFU - Sistema de Agendamento de Espaços Esportivos
 
-## Visão Geral
+## 🎯 Sobre o Projeto
 
-O **Schedule UFU** é um sistema web para gerenciamento de reservas de espaços esportivos da Universidade Federal de Uberlândia. O projeto foi desenvolvido em Angular, utilizando Tailwind CSS e o Design System do GOVBR, com foco em usabilidade, organização e escalabilidade.
+O **Schedule UFU** é a aplicação web frontend da plataforma de **agendamento de espaços esportivos da Universidade Federal de Uberlândia (UFU)**.
+
+Construído em **Angular 19**, com **Tailwind CSS** e **Design System do GOVBR**, o sistema prioriza **usabilidade, acessibilidade e responsividade**, permitindo que estudantes, professores e administradores realizem reservas de forma simples e segura.
+
+Este frontend se conecta diretamente à API do backend **Schedule-Core** (Spring Boot + PostgreSQL), consumindo endpoints REST autenticados via **JWT**.
 
 ---
 
-## Funcionalidades Implementadas
+## ✨ Funcionalidades
 
-### Autenticação e Autorização
+### 🔐 Autenticação e Autorização
+- Envio de código para e-mail institucional (@ufu.br)
+- Validação de código e login com token JWT
+- Proteção de rotas com [`authGuard`](src/app/core/guards/auth.guard.ts)
+- Armazenamento seguro de sessão e logout automático
 
-#### Tela de Login (email-code-send)
-- Envio de código de verificação por email
-- Validação de email institucional (@ufu.br)
-- Redirecionamento para registro ou sistema principal
+### 📅 Reservas de Usuário
+- Visualização de horários disponíveis por data/ginásio
+- Criação de novas reservas com formulário completo
+- Cancelamento de reservas existentes
+- Filtros por ginásio e data
+- Sistema de validação em tempo real
 
-#### Tela de Registro (email-validator)
-- Validação de código enviado por email
-- Cadastro de dados pessoais (nome, matrícula, telefone)
-- Geração automática de token de autenticação
-- Validação de formulário com mensagens de erro personalizadas
+### 👤 Área do Usuário
+- Tela **Minhas Reservas** com listagem personalizada
+- Cancelamento de reservas próprias
+- Feedback visual de sucesso/erro
+- Histórico de agendamentos
 
-#### Sistema de Autenticação
-- Gerenciamento de tokens JWT
-- Proteção de rotas com AuthGuard
-- Armazenamento seguro de dados do usuário
-- Logout automático com redirecionamento
-
-### Tela Principal de Reservas (schedule)
-
-#### Visualização de Agendamentos
-- Tabela com agendamentos do dia selecionado
-- Filtro por ginásio específico
-- Exibição de informações: data, horário, ginásio, campus, responsável, curso
-
-#### Filtros e Navegação
-- Seletor de data (datepicker) para consulta de agendamentos
-- Dropdown para filtrar por ginásio específico
-- Atualização automática da tabela conforme filtros aplicados
-
-#### Criação de Reservas
-- Botão "Criar Reserva" para abrir modal de agendamento
-- Integração com formulário de agendamento completo
-
-### Formulário de Agendamento (schedule-form)
-
-#### Dados Básicos da Reserva
-- Seleção de ginásio via dropdown
-- Seleção de data e horário (datetime-local)
-- Validação automática para horários exatos (sem minutos)
-
-#### Informações do Responsável
-- Email institucional obrigatório (@ufu.br)
-- Nome do responsável
-- Curso/departamento
-- Matrícula do aluno
-- Telefone com máscara de formatação
-- Quantidade de pessoas
-
-#### Agendamento Recorrente
-- Opção para ativar recorrência
-- Configuração de término (data específica ou número de ocorrências)
-- Validação de campos condicionais
-
-#### Validações do Formulário
-- Validação em tempo real com mensagens de erro
-- Campos obrigatórios marcados visualmente
-- Validação de formato de email, telefone e matrícula
-- Prevenção de envio com dados inválidos
-
-### Tela Minhas Reservas (userschedules)
-
-#### Visualização de Reservas Pessoais
-- Listagem de todas as reservas do usuário logado
-- Informações detalhadas de cada agendamento
-- Filtro por ginásio para facilitar localização
-
-#### Gerenciamento de Reservas
-- Botão "Excluir Reserva" para cancelamento
-- Modal de confirmação para exclusão
-- Atualização automática da lista após ações
-
-### Formulário de Exclusão de Reserva (delete-schedule-form)
-
-#### Seleção da Reserva para Exclusão
-- Dropdown com ginásios disponíveis
-- Seleção de data e horário específicos
-- Validação de dados antes da exclusão
-
-#### Confirmação de Exclusão
-- Validação de formulário completo
-- Envio de dados para API de exclusão
-- Feedback visual de sucesso ou erro
-
-### Tela de Configurações (configuration)
-
-#### Interface por Abas
-- Aba "Geral": Visualização de agendamentos gerais
-- Aba "Espaços Esportivos": Gestão de ginásios
-- Aba "Permissões": Gerenciamento de usuários
-
-#### Gestão de Agendamentos
+### ⚙️ Administração (Área Restrita)
+- Gestão de ginásios (CRUD)
+- Gestão de usuários e permissões
+- Cadastro de restrições temporárias em espaços
 - Visualização de todos os agendamentos do sistema
-- Filtros por tipo e localização
-- Opção de cancelamento de agendamentos (funcionalidade administrativa)
+- Criação de novos administradores
 
-#### Gestão de Espaços Esportivos
-- Listagem de todos os ginásios cadastrados
-- Informações: nome, campus, horários de funcionamento
-- Botões para criar e excluir ginásios
-
-#### Gestão de Usuários e Permissões
-- Listagem de usuários do sistema
-- Filtro por tipo de usuário (Administrador, Estudante, Professor)
-- Visualização de dados: nome, matrícula, email, nível de acesso
-
-#### Gestão de Restrições
-- Cadastro de restrições temporárias em ginásios
-- Visualização de restrições ativas
-- Informações: ginásio, data, descrição da restrição
-
-### Componentes Reutilizáveis
-
-#### Sistema de Dropdowns
-- Dropdown customizado (dropdownn) para formulários
-- Select-filter para filtros rápidos
-- Suporte a opções dinâmicas e eventos personalizados
-
-#### Tabelas Especializadas
-- Tabela principal para agendamentos
-- Tabela de usuários com ações administrativas
-- Tabela de espaços esportivos
-- Tabela de restrições
-
-#### Seletores de Data e Hora
+### 🧩 Componentes Reutilizáveis
+- Sistema de modal genérico para formulários
+- Dropdowns customizados e filtros
 - Datepicker integrado com Flatpickr
-- Datetime-local para formulários
-- Validação automática de formatos
-
-#### Interface do Usuário
-- Header com identificação do usuário
-- Menu lateral de navegação
-- Footer institucional
-- Modais responsivos para formulários
-
-### Integrações com Backend
-
-#### Serviços de Agendamento
-- Criação de novos agendamentos
-- Busca por data e ginásio específicos
-- Busca de agendamentos por usuário
-- Exclusão de reservas existentes
-
-#### Serviços Administrativos
-- Busca de todos os agendamentos (visão administrativa)
-- Gestão de usuários do sistema
-- Operações com ginásios (CRUD)
-- Gestão de restrições temporárias
-
-#### Serviços de Layout
-- Carregamento de dados de ginásios
-- Gerenciamento de sessão do usuário
-- Cache de informações essenciais
-
-### Validações e Tratamento de Erros
-
-#### Validações de Formulário
-- Email institucional obrigatório
-- Formato de telefone brasileiro
-- Campos obrigatórios com feedback visual
-- Validação de horários e datas
-
-#### Tratamento de Erros
-- Mensagens de erro personalizadas
-- Feedback visual para operações
-- Tratamento de erros de rede
-- Logs detalhados para debugging
-
-#### Experiência do Usuário
-- Estados de loading durante operações
-- Confirmações para ações destrutivas
-- Navegação intuitiva entre telas
-- Responsividade para diferentes dispositivos
+- Tabelas dinâmicas responsivas
+- Header, menu lateral e footer institucionais
+- Formulários com validações integradas
 
 ---
 
-## Development server
+## 🏗️ Arquitetura do Frontend
 
-To start a local development server, run:
+A aplicação segue a arquitetura de **Single Page Application (SPA)** com Angular:
 
-```bash
-ng serve
-```
+### 🎨 Layouts
+- **[`AuthLayoutComponent`](src/app/core/layouts/auth-layout/auth-layout.component.ts)**: Telas de login e validação de e-mail
+- **[`ScheduleLayoutComponent`](src/app/core/layouts/schedule-layout/schedule-layout.component.ts)**: Área logada de agendamento e administração
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### 📄 Páginas (Pages)
+- **[`email-code-send`](src/app/core/pages/email-code-send/email-code-send.component.ts)**: Envio de código por email
+- **[`email-validator`](src/app/core/pages/email-validator/email-validator.component.ts)**: Validação e cadastro
+- **[`schedule`](src/app/core/pages/schedule/schedule.component.ts)**: Página principal de agendamento
+- **[`userschedules`](src/app/core/pages/userschdeules/userschdeules.component.ts)**: Reservas do usuário
+- **[`configuration`](src/app/core/pages/configuration/configuration.component.ts)**: Administração completa
 
-## Code scaffolding
+### 🔧 Serviços (Services)
+- **[`AuthService`](src/app/core/services/auth/auth.service.ts)**: Autenticação e gerenciamento de sessão
+- **[`SchedulesService`](src/app/core/services/schedule/schedules.service.ts)**: CRUD de reservas
+- **[`AdmService`](src/app/core/services/adm/adm.service.ts)**: Operações administrativas
+- **[`ScheduleTimeService`](src/app/core/services/schedule/schedule-time.service.ts)**: Comunicação entre componentes
+- **[`LayoutSchedulesService`](src/app/core/services/layout/layout-schedules.service.ts)**: Gerenciamento de layout e dados
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### 🛡️ Guards & Routing
+- **[`authGuard`](src/app/core/guards/auth.guard.ts)**: Proteção de rotas privadas
+- **[`app.routes.ts`](src/app/core/routes/app.routes.ts)**: Configuração completa de rotas
 
 ---
 
-## Estrutura de Pastas
+## 🔗 Integração com o Backend
 
-### src/app/core/components
+- O frontend consome a API do **Schedule-Core**, hospedada por padrão em `http://localhost:3000`
+- Durante o desenvolvimento, é utilizado um **[proxy Angular](proxy.conf.json)** para redirecionar chamadas
 
-Componentes reutilizáveis e especializados:
+### Fluxo Completo
+1. **Usuário** → Frontend Angular
+2. **Frontend** → API REST (Schedule-Core)
+3. **Backend** → PostgreSQL (persistência)
+4. **Resposta** → Frontend → Interface gráfica
 
-- **dropdownn/**: Dropdown customizado para seleção em formulários.
-- **select-filter/**: Dropdown para filtros rápidos em tabelas/listas.
-- **schedule-form/**: Formulário principal de agendamento, com suporte a recorrência.
-- **table/**: Tabela para exibição de reservas, com botões de ação (reservar, editar).
-- **table-users/**: Tabela para gestão de usuários (nome, matrícula, email, tipo, ações).
-- **table-espacos/**: Tabela para gestão de espaços esportivos (nome, campus, horários, disponibilidade, ações).
-- **datapicker/**: Componente para seleção de datas e horários.
-- **slider/**: Componente de slider para seleção de valores numéricos (ex: antecedência de agendamento).
-
-### src/app/core/models
-
-Interfaces e tipos utilizados em toda a aplicação:
-
-- **Option.ts**: Interface para opções de dropdowns.
-- **Reserva.ts**: Interface para reservas/agendamentos.
-- **User.ts**: Interface para usuários do sistema.
-- **Ginasio.ts**: Interface para espaços esportivos.
-
-### src/app/core/pages
-
-Páginas principais do sistema:
-
-- **schedule/**: Página principal de reservas, exibe tabela de horários e permite abrir o formulário de agendamento.
-- **userschdeules/**: Página "Minhas Reservas", exibe reservas do usuário e permite edição/cancelamento.
-- **configuration/**: Página de configurações administrativas (gestão de reservas, espaços, permissões).
-
-### src/app/core/routes
-
-- **app.routes.ts**: Definição das rotas principais do sistema.
-
-### src/app/core/services
-
-- **schedule-time.service.ts**: Serviço para comunicação entre componentes (ex: abrir modal de agendamento).
-
-### src/app/core/shared
-
-Componentes compartilhados entre páginas:
-
-- **header/**: Cabeçalho do sistema, exibe logo, nome do sistema e usuário logado.
-- **footer/**: Rodapé do sistema, exibe informações institucionais.
-- **menu/**: Menu lateral de navegação entre páginas principais.
+### Principais Endpoints Consumidos
+- `POST /v1/auth/email` - Envio de código
+- `POST /v1/auth/email/validate` - Validação de código
+- `GET /v1/schedule` - Buscar agendamentos
+- `POST /v1/schedule` - Criar agendamento
+- `DELETE /v1/schedule/delete` - Cancelar agendamento
+- `GET /v1/adm/users` - Gestão de usuários
+- `GET /v1/adm/ginasios` - Gestão de ginásios
 
 ---
 
-## Outras Pastas
+## 📱 Principais Telas
 
-### src/assets
+### 🔑 Autenticação
+- **Tela de Login**: Envio de código para email institucional
+- **Tela de Validação**: Verificação de código e cadastro de dados
 
-- Imagens, ícones e arquivos estáticos.
+### 📅 Agendamento
+- **Tela Principal**: Visualização de agendamentos por data/ginásio
+- **Formulário de Reserva**: Criação completa com validações
+- **Minhas Reservas**: Gestão pessoal de agendamentos
 
-### src/styles.css
-
-- Estilos globais e importação do Tailwind CSS.
-
----
-
-## Observações e Boas Práticas
-
-- Cada componente Angular está organizado em sua própria pasta, contendo arquivos `.ts`, `.html`, `.css` e `.spec.ts` (testes).
-- Os componentes são reutilizáveis e seguem o padrão de comunicação via `@Input` e `@Output` para integração entre eles.
-- Serviços são utilizados para lógica compartilhada e comunicação entre componentes que não possuem relação direta de hierarquia.
-- O projeto utiliza Tailwind CSS para estilização rápida e responsiva, além do Design System do GOVBR para padronização visual.
-- O código segue boas práticas de modularização, separação de responsabilidades e uso de tipagem forte com TypeScript.
+### ⚙️ Administração
+- **Gestão de Usuários**: CRUD completo com permissões
+- **Gestão de Ginásios**: Cadastro e configuração de espaços
+- **Restrições**: Bloqueio temporário de espaços
 
 ---
 
-## Como Rodar o Projeto
+## ⚙️ Como Rodar
 
-1. Instale as dependências:
+### Pré-requisitos
+- **Node.js 18+**
+- **Angular CLI**: `npm install -g @angular/cli`
+- **Backend Schedule-Core** em execução (porta 3000)
+
+### Passos
 
 ```bash
+# 1. Clonar o repositório
+git clone [url-do-repositorio]
+cd schedule-ufu
+
+# 2. Instalar dependências
 npm install
+
+# 3. Iniciar servidor de desenvolvimento
+ng serve
+
+# 4. Acessar aplicação
+# http://localhost:4200
 ```
 
-2. Inicie o servidor de desenvolvimento:
+### Scripts Disponíveis
 
 ```bash
+# Desenvolvimento
+npm start
 ng serve
+
+# Build de produção
+npm run build
+ng build
+
+# Testes unitários
+npm test
+ng test
+
+# Linting
+npm run lint
 ```
 
-3. Acesse em [http://localhost:4200](http://localhost:4200)
+## 📂 Estrutura de Pastas
+
+```
+src/app/
+├── core/
+│   ├── components/          # Componentes reutilizáveis
+│   │   ├── generic-modal/   # Sistema de modal genérico
+│   │   ├── schedule-form/   # Formulário de agendamento
+│   │   ├── table/           # Tabelas dinâmicas
+│   │   ├── datepicker/      # Seletor de datas
+│   │   ├── dropdownn/       # Dropdowns customizados
+│   │   └── ...
+│   ├── guards/              # Proteção de rotas
+│   │   └── auth.guard.ts
+│   ├── layouts/             # Layouts principais
+│   │   ├── auth-layout/
+│   │   └── schedule-layout/
+│   ├── models/              # Interfaces TypeScript
+│   │   ├── User.ts
+│   │   ├── ScheduleModel.ts
+│   │   ├── Ginasio.ts
+│   │   └── ...
+│   ├── pages/               # Páginas principais
+│   │   ├── schedule/
+│   │   ├── userschdeules/
+│   │   ├── configuration/
+│   │   └── ...
+│   ├── routes/              # Configuração de rotas
+│   │   └── app.routes.ts
+│   ├── services/            # Serviços da aplicação
+│   │   ├── auth/
+│   │   ├── schedule/
+│   │   ├── adm/
+│   │   └── ...
+│   └── shared/              # Componentes compartilhados
+│       ├── header/
+│       ├── footer/
+│       └── menu/
+└── assets/                  # Recursos estáticos
+    ├── favicon.ico
+    ├── image-logo.png
+    └── ...
+```
 
 ---
 
-## Licença
+## 🛠️ Tecnologias Utilizadas
 
-Projeto acadêmico - Universidade Federal de Uberlândia.
+### Core
+- **Angular 19** - Framework principal
+- **TypeScript** - Linguagem de programação
+- **RxJS** - Programação reativa
+
+### UI/UX
+- **Tailwind CSS** - Framework CSS utilitário
+- **Design System GOVBR** - Padrões governamentais
+- **Flatpickr** - Datepicker avançado
+- **Font Awesome** - Ícones
+
+### Ferramentas
+- **Angular CLI** - Scaffolding e build
+- **Karma & Jasmine** - Testes unitários
+- **ESLint** - Linting de código
+- **PostCSS** - Processamento CSS
+
+---
+
+## 🔧 Funcionalidades Técnicas
+
+### Sistema de Modal Genérico
+- Baseado em [`FormType enum`](src/app/core/models/FormType.ts)
+- [`GenericModalComponent`](src/app/core/components/generic-modal/generic-modal.component.ts) reutilizável
+- Formulários padronizados com validações
+
+### Gerenciamento de Estado
+- Serviços com BehaviorSubject para estado reativo
+- LocalStorage para persistência de sessão
+- Guards para proteção de rotas
+
+### Validações Avançadas
+- Email institucional obrigatório (@ufu.br)
+- Máscaras para telefone e matrícula
+- Validação de horários em tempo real
+- Feedback visual de erros
+
+### Responsividade
+- Breakpoints configurados
+- Componentes adaptativos
+
+---
+
+## 📚 Contexto Acadêmico
+
+Este frontend compõe, junto ao backend **Schedule-Core**, o protótipo funcional do TCC **"Plataforma de Agendamento de Espaços Esportivos da UFU"**, desenvolvido na **Universidade Federal de Uberlândia**.
+
+O sistema demonstra a aplicação de boas práticas de:
+- Arquitetura frontend moderna
+- Segurança com JWT
+- Usabilidade e acessibilidade
+- Integração com APIs REST
+- Design responsivo
+
+### Objetivos Alcançados
+- ✅ Modernização do processo de reservas
+- ✅ Interface intuitiva e acessível
+- ✅ Integração completa frontend/backend
+- ✅ Sistema de autenticação robusto
+- ✅ Área administrativa funcional
+
+---
+
+## 👤 Autor
+
+**Gabriel Rezende Machado**  
+Universidade Federal de Uberlândia  
+Trabalho de Conclusão de Curso
+
+---
